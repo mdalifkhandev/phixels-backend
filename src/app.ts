@@ -16,6 +16,7 @@ const explicitAllowedOrigins = (
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
+const allowAllOrigins = process.env.CORS_ALLOW_ALL === "true";
 
 const isLocalDevOrigin = (origin: string) =>
   /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
@@ -25,6 +26,10 @@ app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin) {
+        callback(null, true);
+        return;
+      }
+      if (allowAllOrigins) {
         callback(null, true);
         return;
       }
