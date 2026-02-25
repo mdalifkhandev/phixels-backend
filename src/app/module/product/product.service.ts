@@ -1,5 +1,8 @@
 import { TProduct } from './product.interface';
 import { ProductModel } from './product.model';
+import AppError from '../../error/appError';
+import httpStatus from 'http-status';
+import { Types } from 'mongoose';
 
 const createProductIntoDB = async (payload: TProduct) => {
   const result = await ProductModel.create(payload);
@@ -12,11 +15,13 @@ const getAllProductsFromDB = async () => {
 };
 
 const getSingleProductFromDB = async (id: string) => {
+  if (!Types.ObjectId.isValid(id)) return null;
   const result = await ProductModel.findById(id);
   return result;
 };
 
 const updateProductInDB = async (id: string, payload: Partial<TProduct>) => {
+  if (!Types.ObjectId.isValid(id)) return null;
   const result = await ProductModel.findByIdAndUpdate(id, payload, {
     new: true,
   });
@@ -24,6 +29,7 @@ const updateProductInDB = async (id: string, payload: Partial<TProduct>) => {
 };
 
 const deleteProductFromDB = async (id: string) => {
+  if (!Types.ObjectId.isValid(id)) return null;
   const result = await ProductModel.findByIdAndUpdate(
     id,
     { isDeleted: true },
@@ -32,10 +38,76 @@ const deleteProductFromDB = async (id: string) => {
   return result;
 };
 
+const getPinnedProductsFromDB = async () => {
+  const result = await ProductModel.find({ isPinned: true })
+    .sort({ pinOrder: 1, updatedAt: -1 })
+    .limit(3);
+  return result;
+};
+
+const updateProductPinInDB = async (
+  id: string,
+  payload: { isPinned: boolean; pinOrder?: 1 | 2 | 3 | null },
+) => {
+  if (!Types.ObjectId.isValid(id)) return null;
+
+  const existing = await ProductModel.findById(id);
+  if (!existing) return null;
+
+  if (!payload.isPinned) {
+    return ProductModel.findByIdAndUpdate(
+      id,
+      { isPinned: false, pinOrder: null },
+      { new: true },
+    );
+  }
+
+  const requestedOrder = payload.pinOrder ?? null;
+  if (!requestedOrder) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'pinOrder is required when isPinned is true',
+    );
+  }
+
+  const conflict = await ProductModel.findOne({
+    _id: { $ne: id },
+    isPinned: true,
+    pinOrder: requestedOrder,
+  });
+
+  if (conflict) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Pin order ${requestedOrder} is already occupied.`,
+    );
+  }
+
+  const currentlyPinnedCount = await ProductModel.countDocuments({
+    isPinned: true,
+    _id: { $ne: id },
+  });
+
+  if (!existing.isPinned && currentlyPinnedCount >= 3) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'Maximum 3 pinned products allowed.',
+    );
+  }
+
+  return ProductModel.findByIdAndUpdate(
+    id,
+    { isPinned: true, pinOrder: requestedOrder },
+    { new: true },
+  );
+};
+
 export const ProductServices = {
   createProductIntoDB,
   getAllProductsFromDB,
   getSingleProductFromDB,
   updateProductInDB,
   deleteProductFromDB,
+  getPinnedProductsFromDB,
+  updateProductPinInDB,
 };

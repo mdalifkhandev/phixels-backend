@@ -10,6 +10,8 @@ const productSchema = new Schema<TProduct>(
     demoLink: { type: String },
     images: { type: [String], default: [] },
     category: { type: String, required: true },
+    isPinned: { type: Boolean, default: false },
+    pinOrder: { type: Number, enum: [1, 2, 3], default: null },
     isDeleted: { type: Boolean, default: false },
   },
   {

@@ -21,10 +21,37 @@ const updateProductValidationSchema = z.object({
     demoLink: z.string().optional(),
     images: z.array(z.string()).optional(),
     category: z.string().optional(),
+    isPinned: z.boolean().optional(),
+    pinOrder: z.union([z.literal(1), z.literal(2), z.literal(3), z.null()]).optional(),
   }),
+});
+
+const updateProductPinValidationSchema = z.object({
+  body: z
+    .object({
+      isPinned: z.boolean({ required_error: 'isPinned is required' }),
+      pinOrder: z.union([z.literal(1), z.literal(2), z.literal(3), z.null()]).optional(),
+    })
+    .superRefine((data, ctx) => {
+      if (data.isPinned && data.pinOrder == null) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'pinOrder is required when isPinned is true',
+          path: ['pinOrder'],
+        });
+      }
+      if (!data.isPinned && data.pinOrder !== undefined && data.pinOrder !== null) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'pinOrder must be null when isPinned is false',
+          path: ['pinOrder'],
+        });
+      }
+    }),
 });
 
 export const ProductValidation = {
   createProductValidationSchema,
   updateProductValidationSchema,
+  updateProductPinValidationSchema,
 };

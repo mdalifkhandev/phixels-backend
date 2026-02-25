@@ -15,6 +15,7 @@ router.post(
 );
 
 router.get('/', ProductController.getAllProducts);
+router.get('/pinned', ProductController.getPinnedProducts);
 
 router.get('/:id', ProductController.getSingleProduct);
 
@@ -23,6 +24,13 @@ router.patch(
   auth(USER_ROLE.admin),
   validateRequest(ProductValidation.updateProductValidationSchema),
   ProductController.updateProduct,
+);
+
+router.patch(
+  '/:id/pin',
+  auth(USER_ROLE.admin),
+  validateRequest(ProductValidation.updateProductPinValidationSchema),
+  ProductController.updateProductPin,
 );
 
 router.delete('/:id', auth(USER_ROLE.admin), ProductController.deleteProduct);
