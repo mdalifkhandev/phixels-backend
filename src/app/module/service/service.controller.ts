@@ -222,6 +222,48 @@ const deleteServiceSubcategory = catchAsync(async (req: Request, res: Response) 
   });
 });
 
+const uploadServiceCategoryImage = catchAsync(async (req: Request, res: Response) => {
+  if (!req.file) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Image file is required');
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Service category image uploaded successfully',
+    data: { image: (req.file as any).path },
+  });
+});
+
+const reorderServiceCategories = catchAsync(async (req: Request, res: Response) => {
+  const { orderedIds } = req.body;
+  const result = await ServiceServices.reorderServiceCategoriesInDB(
+    orderedIds as string[],
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Service categories reordered successfully',
+    data: result,
+  });
+});
+
+const reorderServiceSubcategories = catchAsync(async (req: Request, res: Response) => {
+  const { categoryId, orderedIds } = req.body;
+  const result = await ServiceServices.reorderServiceSubcategoriesInDB(
+    categoryId as string,
+    orderedIds as string[],
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Service subcategories reordered successfully',
+    data: result,
+  });
+});
+
 export const ServiceController = {
   getServiceMenu,
   createServiceCategory,
@@ -234,6 +276,9 @@ export const ServiceController = {
   getServiceSubcategoryBySlugs,
   updateServiceSubcategory,
   deleteServiceSubcategory,
+  uploadServiceCategoryImage,
+  reorderServiceCategories,
+  reorderServiceSubcategories,
   createService,
   getAllServices,
   getSingleService,

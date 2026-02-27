@@ -4,6 +4,7 @@ import { ServiceController } from './service.controller';
 import { ServiceValidation } from './service.validation';
 import auth from '../../middleware/auth';
 import { USER_ROLE } from '../../Interface/types';
+import { upload } from '../../utils/upload.utils';
 
 const router = Router();
 
@@ -17,6 +18,20 @@ router.get(
 );
 
 // Admin category routes
+router.post(
+  '/upload-image',
+  auth(USER_ROLE.admin),
+  upload.single('image'),
+  ServiceController.uploadServiceCategoryImage,
+);
+
+router.patch(
+  '/categories/reorder',
+  auth(USER_ROLE.admin),
+  validateRequest(ServiceValidation.reorderServiceCategoriesValidationSchema),
+  ServiceController.reorderServiceCategories,
+);
+
 router.post(
   '/categories',
   auth(USER_ROLE.admin),
@@ -38,6 +53,13 @@ router.delete(
 );
 
 // Admin subcategory routes
+router.patch(
+  '/subcategories/reorder',
+  auth(USER_ROLE.admin),
+  validateRequest(ServiceValidation.reorderServiceSubcategoriesValidationSchema),
+  ServiceController.reorderServiceSubcategories,
+);
+
 router.post(
   '/subcategories',
   auth(USER_ROLE.admin),

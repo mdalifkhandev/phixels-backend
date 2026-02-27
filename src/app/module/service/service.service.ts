@@ -36,6 +36,13 @@ const deleteServiceFromDB = async (id: string) => {
 
 // New category methods
 const createServiceCategoryIntoDB = async (payload: TServiceCategory) => {
+  if (payload.sortOrder === undefined || payload.sortOrder === null) {
+    const lastCategory = await ServiceCategoryModel.findOne()
+      .sort({ sortOrder: -1, createdAt: -1 })
+      .select('sortOrder')
+      .lean();
+    payload.sortOrder = (lastCategory?.sortOrder ?? -1) + 1;
+  }
   return ServiceCategoryModel.create(payload);
 };
 
@@ -66,6 +73,15 @@ const deleteServiceCategoryFromDB = async (id: string) => {
 
 // New subcategory methods
 const createServiceSubcategoryIntoDB = async (payload: TServiceSubcategory) => {
+  if (payload.sortOrder === undefined || payload.sortOrder === null) {
+    const lastSubcategory = await ServiceSubcategoryModel.findOne({
+      categoryId: payload.categoryId,
+    })
+      .sort({ sortOrder: -1, createdAt: -1 })
+      .select('sortOrder')
+      .lean();
+    payload.sortOrder = (lastSubcategory?.sortOrder ?? -1) + 1;
+  }
   return ServiceSubcategoryModel.create(payload);
 };
 
@@ -154,6 +170,32 @@ const getServiceMenuFromDB = async () => {
   }));
 };
 
+const reorderServiceCategoriesInDB = async (orderedIds: string[]) => {
+  const updates = orderedIds.map((id, index) =>
+    ServiceCategoryModel.findByIdAndUpdate(id, { sortOrder: index }, { new: false }),
+  );
+  await Promise.all(updates);
+  return ServiceCategoryModel.find().sort({ sortOrder: 1, createdAt: -1 });
+};
+
+const reorderServiceSubcategoriesInDB = async (
+  categoryId: string,
+  orderedIds: string[],
+) => {
+  const updates = orderedIds.map((id, index) =>
+    ServiceSubcategoryModel.findOneAndUpdate(
+      { _id: id, categoryId },
+      { sortOrder: index },
+      { new: false },
+    ),
+  );
+  await Promise.all(updates);
+  return ServiceSubcategoryModel.find({ categoryId }).sort({
+    sortOrder: 1,
+    createdAt: -1,
+  });
+};
+
 export const ServiceServices = {
   // Legacy
   createServiceIntoDB,
@@ -176,4 +218,6 @@ export const ServiceServices = {
   deleteServiceSubcategoryFromDB,
   // Menu
   getServiceMenuFromDB,
+  reorderServiceCategoriesInDB,
+  reorderServiceSubcategoriesInDB,
 };

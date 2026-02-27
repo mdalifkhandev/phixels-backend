@@ -137,6 +137,19 @@ const updateServiceSubcategoryValidationSchema = z.object({
   }),
 });
 
+const reorderServiceCategoriesValidationSchema = z.object({
+  body: z.object({
+    orderedIds: z.array(z.string()).min(1, 'orderedIds is required'),
+  }),
+});
+
+const reorderServiceSubcategoriesValidationSchema = z.object({
+  body: z.object({
+    categoryId: z.string({ required_error: 'categoryId is required' }),
+    orderedIds: z.array(z.string()).min(1, 'orderedIds is required'),
+  }),
+});
+
 export const ServiceValidation = {
   createServiceValidationSchema,
   updateServiceValidationSchema,
@@ -144,4 +157,6 @@ export const ServiceValidation = {
   updateServiceCategoryValidationSchema,
   createServiceSubcategoryValidationSchema,
   updateServiceSubcategoryValidationSchema,
+  reorderServiceCategoriesValidationSchema,
+  reorderServiceSubcategoriesValidationSchema,
 };
