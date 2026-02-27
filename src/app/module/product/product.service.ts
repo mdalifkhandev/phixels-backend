@@ -5,6 +5,9 @@ import httpStatus from 'http-status';
 import { Types } from 'mongoose';
 
 const createProductIntoDB = async (payload: TProduct) => {
+  if (payload.downloadsEnabled !== true) {
+    payload.downloadCount = null;
+  }
   const result = await ProductModel.create(payload);
   return result;
 };
@@ -22,6 +25,9 @@ const getSingleProductFromDB = async (id: string) => {
 
 const updateProductInDB = async (id: string, payload: Partial<TProduct>) => {
   if (!Types.ObjectId.isValid(id)) return null;
+  if (payload.downloadsEnabled === false) {
+    payload.downloadCount = null;
+  }
   const result = await ProductModel.findByIdAndUpdate(id, payload, {
     new: true,
   });

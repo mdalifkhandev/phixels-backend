@@ -98,6 +98,19 @@ const updateProductPin = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const uploadProductImage = catchAsync(async (req: Request, res: Response) => {
+  if (!req.file) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Image file is required');
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Product image uploaded successfully',
+    data: { image: (req.file as any).path },
+  });
+});
+
 export const ProductController = {
   createProduct,
   getAllProducts,
@@ -106,4 +119,5 @@ export const ProductController = {
   deleteProduct,
   getPinnedProducts,
   updateProductPin,
+  uploadProductImage,
 };

@@ -4,8 +4,16 @@ import { ProductController } from './product.controller';
 import { ProductValidation } from './product.validation';
 import auth from '../../middleware/auth';
 import { USER_ROLE } from '../../Interface/types';
+import { upload } from '../../utils/upload.utils';
 
 const router = Router();
+
+router.post(
+  '/upload-image',
+  auth(USER_ROLE.admin),
+  upload.single('image'),
+  ProductController.uploadProductImage,
+);
 
 router.post(
   '/',
