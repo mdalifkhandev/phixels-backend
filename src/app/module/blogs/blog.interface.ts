@@ -6,4 +6,11 @@ export type TBlog = {
     image: string;
     details: string;
     tags?: string[];
+    categoryName?: string;
+    slug?: string;
+    status?: 'draft' | 'published';
+    serviceId?: string;
+    icon?: string;
+    isFeatured?: boolean;
+    featuredOrder?: number | null;
 }

@@ -14,6 +14,13 @@ const createBlogValidationSchema = z.object({
     details: z.string({
       required_error: "Details are required"
     }),
+    categoryName: z.string().optional(),
+    slug: z.string().optional(),
+    status: z.enum(['draft', 'published']).optional(),
+    serviceId: z.string().optional(),
+    icon: z.string().optional(),
+    isFeatured: z.boolean().optional(),
+    featuredOrder: z.number().nullable().optional(),
     tags: z.preprocess((val) => {
       if (typeof val === 'string') {
         try {
@@ -34,6 +41,13 @@ const updateBlogValidationSchema = z.object({
     writer: z.string().optional(),
     readingTime: z.string().optional(),
     details: z.string().optional(),
+    categoryName: z.string().optional(),
+    slug: z.string().optional(),
+    status: z.enum(['draft', 'published']).optional(),
+    serviceId: z.string().optional(),
+    icon: z.string().optional(),
+    isFeatured: z.boolean().optional(),
+    featuredOrder: z.number().nullable().optional(),
     tags: z.preprocess((val) => {
       if (typeof val === 'string') {
         try {

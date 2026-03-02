@@ -33,6 +33,8 @@ router.post(
 );
 
 router.get('/', BlogController.getAllBlogs);
+router.get('/featured', BlogController.getFeaturedBlogs);
+router.get('/slug/:slug', BlogController.getSingleBlogBySlug);
 
 router.get('/:id', BlogController.getSingleBlog);
 
@@ -58,5 +60,6 @@ router.patch(
 );
 
 router.delete('/:id', auth(USER_ROLE.admin), BlogController.deleteBlog);
+router.patch('/:id/feature', auth(USER_ROLE.admin), BlogController.updateBlogFeature);
 
 export const BlogRouter = router;

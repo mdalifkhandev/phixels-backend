@@ -42,6 +42,29 @@ const getSingleBlog = catchAsync(async (req, res) => {
     });
 });
 
+const getSingleBlogBySlug = catchAsync(async (req, res) => {
+    const { slug } = req.params;
+    const result = await BlogService.getSingleBlogBySlug(slug as string);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Blog retrieved successfully",
+        data: result
+    });
+});
+
+const getFeaturedBlogs = catchAsync(async (_req, res) => {
+    const result = await BlogService.getFeaturedBlogs();
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Featured blogs retrieved successfully",
+        data: result
+    });
+});
+
 const updateBlog = catchAsync(async (req, res) => {
     const { id } = req.params;
     
@@ -72,10 +95,25 @@ const deleteBlog = catchAsync(async (req, res) => {
     });
 });
 
+const updateBlogFeature = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await BlogService.updateFeatureStatus(id as string, req.body);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Blog feature status updated successfully",
+        data: result
+    });
+});
+
 export const BlogController = {
     createBlog,
     getAllBlogs,
     getSingleBlog,
+    getSingleBlogBySlug,
+    getFeaturedBlogs,
     updateBlog,
-    deleteBlog
+    deleteBlog,
+    updateBlogFeature,
 };

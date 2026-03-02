@@ -30,9 +30,45 @@ const blogSchema = new Schema<TBlog>({
     tags: {
         type: [String],
         default: []
+    },
+    categoryName: {
+        type: String,
+        default: 'Uncategorized'
+    },
+    slug: {
+        type: String,
+        trim: true,
+        lowercase: true,
+        unique: true,
+        sparse: true,
+    },
+    status: {
+        type: String,
+        enum: ['draft', 'published'],
+        default: 'draft',
+    },
+    serviceId: {
+        type: String,
+        default: '',
+    },
+    icon: {
+        type: String,
+        default: '',
+    },
+    isFeatured: {
+        type: Boolean,
+        default: false,
+    },
+    featuredOrder: {
+        type: Number,
+        default: null,
     }
 }, {
     timestamps: true
 });
+
+blogSchema.index({ slug: 1 }, { unique: true, sparse: true });
+blogSchema.index({ status: 1 });
+blogSchema.index({ isFeatured: 1, featuredOrder: 1 });
 
 export const Blog = model<TBlog>('Blog', blogSchema);
