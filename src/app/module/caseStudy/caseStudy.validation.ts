@@ -10,6 +10,8 @@ const createCaseStudyValidationSchema = z.object({
     result: z.string({ required_error: "Result is required" }),
     image: z.string({ required_error: "Image is required" }),
     link: z.string({ required_error: "Link is required" }).url(),
+    serviceId: z.string().optional(),
+    icon: z.string().optional(),
   }),
 });
 
@@ -23,6 +25,8 @@ const updateCaseStudyValidationSchema = z.object({
     result: z.string().optional(),
     image: z.string().optional(),
     link: z.string().url().optional(),
+    serviceId: z.string().optional(),
+    icon: z.string().optional(),
   }),
 });
 

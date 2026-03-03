@@ -7,4 +7,6 @@ export interface TCaseStudy {
   result: string;
   image: string;
   link: string;
+  serviceId?: string;
+  icon?: string;
 }

@@ -80,6 +80,7 @@ const updateProductPinInDB = async (
     _id: { $ne: id },
     isPinned: true,
     pinOrder: requestedOrder,
+    isDeleted: { $ne: true },
   });
 
   if (conflict) {
@@ -92,6 +93,7 @@ const updateProductPinInDB = async (
   const currentlyPinnedCount = await ProductModel.countDocuments({
     isPinned: true,
     _id: { $ne: id },
+    isDeleted: { $ne: true },
   });
 
   if (!existing.isPinned && currentlyPinnedCount >= 3) {

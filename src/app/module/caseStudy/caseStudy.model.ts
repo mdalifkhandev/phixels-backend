@@ -11,6 +11,8 @@ const caseStudySchema = new Schema<TCaseStudy>(
     result: { type: String, required: true },
     image: { type: String, required: true },
     link: { type: String, required: true },
+    serviceId: { type: String, required: false },
+    icon: { type: String, required: false },
   },
   {
     timestamps: true,
