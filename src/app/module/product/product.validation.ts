@@ -13,6 +13,7 @@ const createProductValidationSchema = z.object({
     userCount: z.number().min(0).nullable().optional(),
     downloadsEnabled: z.boolean().optional(),
     downloadCount: z.number().min(0).nullable().optional(),
+    position: z.number().optional(),
   }),
 });
 
@@ -31,6 +32,7 @@ const updateProductValidationSchema = z.object({
     downloadCount: z.number().min(0).nullable().optional(),
     isPinned: z.boolean().optional(),
     pinOrder: z.union([z.literal(1), z.literal(2), z.literal(3), z.null()]).optional(),
+    position: z.number().optional(),
   }),
 });
 
@@ -58,8 +60,15 @@ const updateProductPinValidationSchema = z.object({
     }),
 });
 
+const updateProductPositionsValidationSchema = z.object({
+  body: z.object({
+    orderedIds: z.array(z.string({ required_error: 'orderedIds array of strings is required' })),
+  }),
+});
+
 export const ProductValidation = {
   createProductValidationSchema,
   updateProductValidationSchema,
   updateProductPinValidationSchema,
+  updateProductPositionsValidationSchema,
 };

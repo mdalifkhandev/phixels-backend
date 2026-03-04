@@ -16,6 +16,7 @@ const productSchema = new Schema<TProduct>(
     downloadCount: { type: Number, default: null },
     isPinned: { type: Boolean, default: false },
     pinOrder: { type: Number, enum: [1, 2, 3], default: null },
+    position: { type: Number, default: 0 },
     isDeleted: { type: Boolean, default: false },
   },
   {

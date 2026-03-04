@@ -22,6 +22,13 @@ router.post(
   ProductController.createProduct,
 );
 
+router.patch(
+  '/reorder',
+  auth(USER_ROLE.admin),
+  validateRequest(ProductValidation.updateProductPositionsValidationSchema),
+  ProductController.updateProductPositions,
+);
+
 router.get('/', ProductController.getAllProducts);
 router.get('/pinned', ProductController.getPinnedProducts);
 

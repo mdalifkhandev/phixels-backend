@@ -12,5 +12,6 @@ export type TProduct = {
   downloadCount?: number | null;
   isPinned?: boolean;
   pinOrder?: 1 | 2 | 3 | null;
+  position?: number;
   isDeleted?: boolean;
 };

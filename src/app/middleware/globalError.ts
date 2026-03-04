@@ -22,7 +22,11 @@ const globalError: ErrorRequestHandler = (err, req, res, next) => {
     console.error('Time:', new Date().toISOString());
     console.error('Path:', req.path);
     console.error('Method:', req.method);
-    console.error('Error:', err);
+    console.error('Error Name:', err?.name);
+    console.error('Error Message:', err?.message);
+    if (err?.stack) {
+        console.error('Error Stack:', err.stack);
+    }
     console.error('------- API Error End -------');
 
     if (err instanceof ZodError) {
