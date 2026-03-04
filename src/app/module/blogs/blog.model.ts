@@ -66,6 +66,10 @@ const blogSchema = new Schema<TBlog>({
     featuredOrder: {
         type: Number,
         default: null,
+    },
+    position: {
+        type: Number,
+        default: 0,
     }
 }, {
     timestamps: true

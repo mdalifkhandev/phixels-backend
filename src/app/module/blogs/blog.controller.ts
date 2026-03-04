@@ -121,6 +121,18 @@ const updateBlogFeature = catchAsync(async (req, res) => {
     });
 });
 
+const updateBlogPositions = catchAsync(async (req, res) => {
+    const { blogs } = req.body;
+    const result = await BlogService.updateBlogPositions(blogs);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Blog positions updated successfully",
+        data: result
+    });
+});
+
 export const BlogController = {
     createBlog,
     getAllBlogs,
@@ -130,5 +142,6 @@ export const BlogController = {
     updateBlog,
     deleteBlog,
     updateBlogFeature,
+    updateBlogPositions,
     uploadImage,
 };

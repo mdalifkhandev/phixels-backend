@@ -40,6 +40,13 @@ router.post('/upload-image', auth(USER_ROLE.admin), upload.single('image'), Blog
 router.get('/:id', BlogController.getSingleBlog);
 
 router.patch(
+    '/reorder',
+    auth(USER_ROLE.admin),
+    validateRequest(BlogValidation.updateBlogPositionsValidationSchema),
+    BlogController.updateBlogPositions
+);
+
+router.patch(
     '/:id',
     auth(USER_ROLE.admin),
     upload.single('image'),

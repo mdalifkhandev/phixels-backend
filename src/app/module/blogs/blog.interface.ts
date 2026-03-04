@@ -14,4 +14,5 @@ export type TBlog = {
     icon?: string;
     isFeatured?: boolean;
     featuredOrder?: number | null;
+    position?: number;
 }

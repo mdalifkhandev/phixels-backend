@@ -54,7 +54,7 @@ const createBlog = async (payload: TBlog) => {
 };
 
 const getAllBlogs = async () => {
-    const result = await Blog.find().sort({ createdAt: -1 });
+    const result = await Blog.find().sort({ position: 1, createdAt: -1 });
     return result;
 };
 
@@ -119,6 +119,20 @@ const updateFeatureStatus = async (id: string, payload: { isFeatured: boolean; f
     );
 };
 
+const updateBlogPositions = async (blogs: { id: string; position: number }[]) => {
+    const bulkOps = blogs.map((blog) => ({
+        updateOne: {
+            filter: { _id: blog.id } as any,
+            update: { $set: { position: blog.position } }
+        }
+    }));
+    
+    if (bulkOps.length > 0) {
+        await Blog.bulkWrite(bulkOps);
+    }
+    return { message: "Positions updated successfully" };
+};
+
 export const BlogService = {
     createBlog,
     getAllBlogs,
@@ -128,4 +142,5 @@ export const BlogService = {
     getFeaturedBlogs,
     getSingleBlogBySlug,
     updateFeatureStatus,
+    updateBlogPositions,
 };

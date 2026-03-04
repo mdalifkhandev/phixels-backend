@@ -22,6 +22,7 @@ const createBlogValidationSchema = z.object({
     icon: z.string().optional(),
     isFeatured: z.boolean().optional(),
     featuredOrder: z.number().nullable().optional(),
+    position: z.number().optional(),
     tags: z.preprocess((val) => {
       if (typeof val === 'string') {
         try {
@@ -50,6 +51,7 @@ const updateBlogValidationSchema = z.object({
     icon: z.string().optional(),
     isFeatured: z.boolean().optional(),
     featuredOrder: z.number().nullable().optional(),
+    position: z.number().optional(),
     tags: z.preprocess((val) => {
       if (typeof val === 'string') {
         try {
@@ -64,7 +66,17 @@ const updateBlogValidationSchema = z.object({
   })
 });
 
+const updateBlogPositionsValidationSchema = z.object({
+  body: z.object({
+    blogs: z.array(z.object({
+      id: z.string(),
+      position: z.number()
+    }))
+  })
+});
+
 export const BlogValidation = {
   createBlogValidationSchema,
-  updateBlogValidationSchema
+  updateBlogValidationSchema,
+  updateBlogPositionsValidationSchema
 };
