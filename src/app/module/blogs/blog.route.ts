@@ -35,6 +35,7 @@ router.post(
 router.get('/', BlogController.getAllBlogs);
 router.get('/featured', BlogController.getFeaturedBlogs);
 router.get('/slug/:slug', BlogController.getSingleBlogBySlug);
+router.post('/upload-image', auth(USER_ROLE.admin), upload.single('image'), BlogController.uploadImage);
 
 router.get('/:id', BlogController.getSingleBlog);
 

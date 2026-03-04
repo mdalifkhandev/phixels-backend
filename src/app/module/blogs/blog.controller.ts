@@ -2,6 +2,20 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { BlogService } from "./blog.service";
+import AppError from "../../error/appError";
+
+const uploadImage = catchAsync(async (req, res) => {
+    if (!req.file) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'No image file provided');
+    }
+    const imageUrl = (req.file as any).path;
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Image uploaded successfully',
+        data: { image: imageUrl },
+    });
+});
 
 const createBlog = catchAsync(async (req, res) => {
     // Check for uploaded image
@@ -116,4 +130,5 @@ export const BlogController = {
     updateBlog,
     deleteBlog,
     updateBlogFeature,
+    uploadImage,
 };
