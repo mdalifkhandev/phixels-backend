@@ -10,6 +10,7 @@ export type TBlog = {
     slug?: string;
     status?: 'draft' | 'published';
     serviceId?: string;
+    authorId?: string;
     icon?: string;
     isFeatured?: boolean;
     featuredOrder?: number | null;

@@ -51,6 +51,10 @@ const blogSchema = new Schema<TBlog>({
         type: String,
         default: '',
     },
+    authorId: {
+        type: String,
+        default: '',
+    },
     icon: {
         type: String,
         default: '',

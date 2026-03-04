@@ -10,6 +10,7 @@ import { ServiceRouter } from "../module/service/service.route";
 import { AnalyticsRouter } from "../module/analytics/analytics.route";
 import { ReviewRouter } from "../module/reviews/review.route";
 import { SettingsRouter } from "../module/settings/settings.route";
+import { AuthorRouter } from "../module/author/author.route";
 
 const router = Router()
 
@@ -57,6 +58,10 @@ const moduleRought = [
     {
         path: '/settings',
         route: SettingsRouter
+    },
+    {
+        path: '/authors',
+        route: AuthorRouter
     }
 ]
 
