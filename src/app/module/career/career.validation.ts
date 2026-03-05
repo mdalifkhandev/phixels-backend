@@ -15,6 +15,7 @@ const createCareerValidationSchema = z.object({
     deadline: z.string().optional().transform((str) => (str ? new Date(str) : undefined)),
     applicationLink: z.string().optional(),
     applicationEmail: z.string().email().optional(),
+    position: z.number().optional(),
   }),
 });
 
@@ -32,10 +33,18 @@ const updateCareerValidationSchema = z.object({
     deadline: z.string().optional().transform((str) => (str ? new Date(str) : undefined)),
     applicationLink: z.string().optional(),
     applicationEmail: z.string().email().optional(),
+    position: z.number().optional(),
+  }),
+});
+
+const updateCareerPositionsValidationSchema = z.object({
+  body: z.object({
+    orderedIds: z.array(z.string({ required_error: 'orderedIds array of strings is required' })),
   }),
 });
 
 export const CareerValidation = {
   createCareerValidationSchema,
   updateCareerValidationSchema,
+  updateCareerPositionsValidationSchema,
 };

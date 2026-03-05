@@ -62,10 +62,22 @@ const deleteCareer = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateCareerPositions = catchAsync(async (req: Request, res: Response) => {
+  const result = await CareerServices.updateCareerPositionsArray(req.body.orderedIds);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Career positions updated successfully',
+    data: result,
+  });
+});
+
 export const CareerController = {
   createCareer,
   getAllCareers,
   getSingleCareer,
   updateCareer,
   deleteCareer,
+  updateCareerPositions,
 };

@@ -9,5 +9,6 @@ export type TCareer = {
   deadline?: Date;
   applicationLink?: string;
   applicationEmail?: string;
+  position?: number;
   isDeleted?: boolean;
 };

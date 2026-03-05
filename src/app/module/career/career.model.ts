@@ -17,6 +17,7 @@ const careerSchema = new Schema<TCareer>(
     deadline: { type: Date },
     applicationLink: { type: String },
     applicationEmail: { type: String },
+    position: { type: Number, default: 0 },
     isDeleted: { type: Boolean, default: false },
   },
   {

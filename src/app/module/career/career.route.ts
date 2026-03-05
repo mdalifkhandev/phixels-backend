@@ -16,6 +16,13 @@ router.post(
 
 router.get('/', CareerController.getAllCareers);
 
+router.patch(
+  '/reorder',
+  auth(USER_ROLE.admin),
+  validateRequest(CareerValidation.updateCareerPositionsValidationSchema),
+  CareerController.updateCareerPositions,
+);
+
 router.get('/:id', CareerController.getSingleCareer);
 
 router.patch(

@@ -7,7 +7,7 @@ const createCareerIntoDB = async (payload: TCareer) => {
 };
 
 const getAllCareersFromDB = async () => {
-  const result = await CareerModel.find();
+  const result = await CareerModel.find().sort({ position: 1, createdAt: -1 });
   return result;
 };
 
@@ -32,10 +32,24 @@ const deleteCareerFromDB = async (id: string) => {
   return result;
 };
 
+const updateCareerPositionsArray = async (orderedIds: string[]) => {
+  const { Types } = require('mongoose');
+  const bulkOperations = orderedIds.map((id, index) => ({
+    updateOne: {
+      filter: { _id: new Types.ObjectId(id) },
+      update: { position: index },
+    },
+  }));
+
+  const result = await CareerModel.bulkWrite(bulkOperations);
+  return result;
+};
+
 export const CareerServices = {
   createCareerIntoDB,
   getAllCareersFromDB,
   getSingleCareerFromDB,
   updateCareerInDB,
   deleteCareerFromDB,
+  updateCareerPositionsArray,
 };
