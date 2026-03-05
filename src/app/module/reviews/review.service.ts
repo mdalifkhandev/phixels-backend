@@ -7,7 +7,7 @@ const createReviewIntoDB = async (payload: TReview) => {
 };
 
 const getAllReviewsFromDB = async () => {
-  const result = await ReviewModel.find().sort({ createdAt: -1 });
+  const result = await ReviewModel.find().sort({ position: 1, createdAt: -1 });
   return result;
 };
 
@@ -30,11 +30,24 @@ const deleteReviewFromDB = async (id: string) => {
   return result;
 };
 
+const updateReviewPositionsArray = async (orderedIds: string[]) => {
+  const { Types } = require('mongoose');
+  const bulkOperations = orderedIds.map((id, index) => ({
+    updateOne: {
+      filter: { _id: new Types.ObjectId(id) },
+      update: { position: index },
+    },
+  }));
+
+  const result = await ReviewModel.bulkWrite(bulkOperations);
+  return result;
+};
+
 export const ReviewServices = {
   createReviewIntoDB,
   getAllReviewsFromDB,
   getSingleReviewFromDB,
   updateReviewInDB,
   deleteReviewFromDB,
+  updateReviewPositionsArray,
 };
-

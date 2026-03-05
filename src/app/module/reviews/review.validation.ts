@@ -11,6 +11,7 @@ const createReviewValidationSchema = z.object({
     budget: z.string({ required_error: 'Budget is required' }),
     duration: z.string({ required_error: 'Duration is required' }),
     summary: z.string({ required_error: 'Summary is required' }),
+    position: z.number().optional(),
   }),
 });
 
@@ -25,11 +26,19 @@ const updateReviewValidationSchema = z.object({
     budget: z.string().optional(),
     duration: z.string().optional(),
     summary: z.string().optional(),
+    position: z.number().optional(),
+  }),
+});
+
+const updateReviewPositionsValidationSchema = z.object({
+  body: z.object({
+    orderedIds: z.array(z.string({ required_error: 'orderedIds array of strings is required' })),
   }),
 });
 
 export const ReviewValidation = {
   createReviewValidationSchema,
   updateReviewValidationSchema,
+  updateReviewPositionsValidationSchema,
 };
 

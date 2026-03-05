@@ -12,6 +12,7 @@ const reviewSchema = new Schema<TReview>(
     budget: { type: String, required: true },
     duration: { type: String, required: true },
     summary: { type: String, required: true },
+    position: { type: Number, default: 0 },
     isDeleted: { type: Boolean, default: false },
   },
   {

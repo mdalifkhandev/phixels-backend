@@ -87,6 +87,17 @@ const uploadReviewImage = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateReviewPositions = catchAsync(async (req: Request, res: Response) => {
+  const result = await ReviewServices.updateReviewPositionsArray(req.body.orderedIds);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Review positions updated successfully',
+    data: result,
+  });
+});
+
 export const ReviewController = {
   createReview,
   uploadReviewImage,
@@ -94,4 +105,5 @@ export const ReviewController = {
   getSingleReview,
   updateReview,
   deleteReview,
+  updateReviewPositions,
 };

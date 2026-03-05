@@ -8,6 +8,7 @@ export type TReview = {
   budget: string;
   duration: string;
   summary: string;
+  position?: number;
   isDeleted?: boolean;
 };
 

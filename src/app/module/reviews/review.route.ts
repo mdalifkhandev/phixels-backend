@@ -37,6 +37,14 @@ router.post(
 );
 
 router.get('/', ReviewController.getAllReviews);
+
+router.patch(
+  '/reorder',
+  auth(USER_ROLE.admin),
+  validateRequest(ReviewValidation.updateReviewPositionsValidationSchema),
+  ReviewController.updateReviewPositions,
+);
+
 router.get('/:id', ReviewController.getSingleReview);
 
 router.patch(
