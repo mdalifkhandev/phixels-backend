@@ -2,13 +2,13 @@ import {
   TService,
   TServiceCategory,
   TServiceSubcategory,
-} from './service.interface';
+} from "./service.interface";
 import {
   ServiceCategoryModel,
   ServiceModel,
   ServiceSubcategoryModel,
-} from './service.model';
-import { Types } from 'mongoose';
+} from "./service.model";
+import { Types } from "mongoose";
 
 // Legacy service methods
 const createServiceIntoDB = async (payload: TService) => {
@@ -39,15 +39,24 @@ const createServiceCategoryIntoDB = async (payload: TServiceCategory) => {
   if (payload.sortOrder === undefined || payload.sortOrder === null) {
     const lastCategory = await ServiceCategoryModel.findOne()
       .sort({ sortOrder: -1, createdAt: -1 })
-      .select('sortOrder')
+      .select("sortOrder")
       .lean();
     payload.sortOrder = (lastCategory?.sortOrder ?? -1) + 1;
   }
   return ServiceCategoryModel.create(payload);
 };
 
-const getAllServiceCategoriesFromDB = async () => {
-  return ServiceCategoryModel.find().sort({ sortOrder: 1, createdAt: -1 });
+const getAllServiceCategoriesFromDB = async (
+  query: Record<string, unknown> = {},
+) => {
+  const filter: Record<string, any> = {};
+  if (query.all !== "true") {
+    filter.isActive = true;
+  }
+  return ServiceCategoryModel.find(filter).sort({
+    sortOrder: 1,
+    createdAt: -1,
+  });
 };
 
 const getServiceCategoryBySlugFromDB = async (slug: string) => {
@@ -78,16 +87,22 @@ const createServiceSubcategoryIntoDB = async (payload: TServiceSubcategory) => {
       categoryId: payload.categoryId,
     })
       .sort({ sortOrder: -1, createdAt: -1 })
-      .select('sortOrder')
+      .select("sortOrder")
       .lean();
     payload.sortOrder = (lastSubcategory?.sortOrder ?? -1) + 1;
   }
   return ServiceSubcategoryModel.create(payload);
 };
 
-const getAllServiceSubcategoriesFromDB = async () => {
-  return ServiceSubcategoryModel.find()
-    .populate('categoryId', 'name slug')
+const getAllServiceSubcategoriesFromDB = async (
+  query: Record<string, unknown> = {},
+) => {
+  const filter: Record<string, any> = {};
+  if (query.all !== "true") {
+    filter.isActive = true;
+  }
+  return ServiceSubcategoryModel.find(filter)
+    .populate("categoryId", "name slug")
     .sort({ sortOrder: 1, createdAt: -1 });
 };
 
@@ -142,7 +157,7 @@ const getServiceCategoryDetailBySlugFromDB = async (slug: string) => {
 
 const getServiceMenuFromDB = async () => {
   const categories = await ServiceCategoryModel.find({ isActive: true })
-    .select('name slug iconKey sortOrder')
+    .select("name slug iconKey sortOrder")
     .sort({ sortOrder: 1, createdAt: -1 })
     .lean();
 
@@ -152,7 +167,7 @@ const getServiceMenuFromDB = async () => {
     categoryId: { $in: categoryIds },
     isActive: true,
   })
-    .select('name slug categoryId sortOrder')
+    .select("name slug categoryId sortOrder")
     .sort({ sortOrder: 1, createdAt: -1 })
     .lean();
 
@@ -172,7 +187,11 @@ const getServiceMenuFromDB = async () => {
 
 const reorderServiceCategoriesInDB = async (orderedIds: string[]) => {
   const updates = orderedIds.map((id, index) =>
-    ServiceCategoryModel.findByIdAndUpdate(id, { sortOrder: index }, { new: false }),
+    ServiceCategoryModel.findByIdAndUpdate(
+      id,
+      { sortOrder: index },
+      { new: false },
+    ),
   );
   await Promise.all(updates);
   return ServiceCategoryModel.find().sort({ sortOrder: 1, createdAt: -1 });
