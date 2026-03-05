@@ -13,5 +13,6 @@ export type TProduct = {
   isPinned?: boolean;
   pinOrder?: 1 | 2 | 3 | null;
   position?: number;
+  isActive?: boolean;
   isDeleted?: boolean;
 };

@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
-import httpStatus from 'http-status';
-import catchAsync from '../../utils/catchAsync';
-import sendResponse from '../../utils/sendResponse';
-import { CareerServices } from './career.service';
+import { Request, Response } from "express";
+import httpStatus from "http-status";
+import catchAsync from "../../utils/catchAsync";
+import sendResponse from "../../utils/sendResponse";
+import { CareerServices } from "./career.service";
 
 const createCareer = catchAsync(async (req: Request, res: Response) => {
   const result = await CareerServices.createCareerIntoDB(req.body);
@@ -10,18 +10,18 @@ const createCareer = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Career created successfully',
+    message: "Career created successfully",
     data: result,
   });
 });
 
 const getAllCareers = catchAsync(async (req: Request, res: Response) => {
-  const result = await CareerServices.getAllCareersFromDB();
+  const result = await CareerServices.getAllCareersFromDB(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Careers retrieved successfully',
+    message: "Careers retrieved successfully",
     data: result,
   });
 });
@@ -33,7 +33,7 @@ const getSingleCareer = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Career retrieved successfully',
+    message: "Career retrieved successfully",
     data: result,
   });
 });
@@ -45,7 +45,7 @@ const updateCareer = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Career updated successfully',
+    message: "Career updated successfully",
     data: result,
   });
 });
@@ -57,21 +57,25 @@ const deleteCareer = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Career deleted successfully',
+    message: "Career deleted successfully",
     data: result,
   });
 });
 
-const updateCareerPositions = catchAsync(async (req: Request, res: Response) => {
-  const result = await CareerServices.updateCareerPositionsArray(req.body.orderedIds);
+const updateCareerPositions = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await CareerServices.updateCareerPositionsArray(
+      req.body.orderedIds,
+    );
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Career positions updated successfully',
-    data: result,
-  });
-});
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Career positions updated successfully",
+      data: result,
+    });
+  },
+);
 
 export const CareerController = {
   createCareer,

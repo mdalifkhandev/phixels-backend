@@ -16,7 +16,7 @@ const createCaseStudy = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllCaseStudies = catchAsync(async (req: Request, res: Response) => {
-  const result = await CaseStudyServices.getAllCaseStudiesFromDB();
+  const result = await CaseStudyServices.getAllCaseStudiesFromDB(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

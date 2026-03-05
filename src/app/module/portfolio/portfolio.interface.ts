@@ -7,4 +7,5 @@ export interface TPortfolio {
   activeUsers: string;
   image: string;
   liveLink: string;
+  isActive?: boolean;
 }

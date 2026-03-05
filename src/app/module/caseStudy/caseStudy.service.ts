@@ -6,8 +6,12 @@ const createCaseStudyIntoDB = async (payload: TCaseStudy) => {
   return result;
 };
 
-const getAllCaseStudiesFromDB = async () => {
-  const result = await CaseStudyModel.find();
+const getAllCaseStudiesFromDB = async (query: Record<string, unknown> = {}) => {
+  const filter: Record<string, any> = {};
+  if (query.all !== "true") {
+    filter.isActive = true;
+  }
+  const result = await CaseStudyModel.find(filter);
   return result;
 };
 
@@ -16,7 +20,10 @@ const getSingleCaseStudyFromDB = async (id: string) => {
   return result;
 };
 
-const updateCaseStudyInDB = async (id: string, payload: Partial<TCaseStudy>) => {
+const updateCaseStudyInDB = async (
+  id: string,
+  payload: Partial<TCaseStudy>,
+) => {
   const result = await CaseStudyModel.findByIdAndUpdate(id, payload, {
     new: true,
   });

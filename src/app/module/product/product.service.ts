@@ -1,8 +1,8 @@
-import { TProduct } from './product.interface';
-import { ProductModel } from './product.model';
-import AppError from '../../error/appError';
-import httpStatus from 'http-status';
-import { Types } from 'mongoose';
+import { TProduct } from "./product.interface";
+import { ProductModel } from "./product.model";
+import AppError from "../../error/appError";
+import httpStatus from "http-status";
+import { Types } from "mongoose";
 
 const createProductIntoDB = async (payload: TProduct) => {
   if (payload.downloadsEnabled !== true) {
@@ -12,8 +12,15 @@ const createProductIntoDB = async (payload: TProduct) => {
   return result;
 };
 
-const getAllProductsFromDB = async () => {
-  const result = await ProductModel.find().sort({ position: 1, createdAt: -1 });
+const getAllProductsFromDB = async (query: Record<string, unknown> = {}) => {
+  const filter: Record<string, any> = {};
+  if (query.all !== "true") {
+    filter.isActive = true;
+  }
+  const result = await ProductModel.find(filter).sort({
+    position: 1,
+    createdAt: -1,
+  });
   return result;
 };
 
@@ -72,7 +79,7 @@ const updateProductPinInDB = async (
   if (!requestedOrder) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      'pinOrder is required when isPinned is true',
+      "pinOrder is required when isPinned is true",
     );
   }
 
@@ -99,7 +106,7 @@ const updateProductPinInDB = async (
   if (!existing.isPinned && currentlyPinnedCount >= 3) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      'Maximum 3 pinned products allowed.',
+      "Maximum 3 pinned products allowed.",
     );
   }
 

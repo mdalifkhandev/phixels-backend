@@ -16,7 +16,7 @@ const createPortfolio = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllPortfolios = catchAsync(async (req: Request, res: Response) => {
-  const result = await PortfolioServices.getAllPortfoliosFromDB();
+  const result = await PortfolioServices.getAllPortfoliosFromDB(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

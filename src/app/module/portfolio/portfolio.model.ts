@@ -35,10 +35,14 @@ const portfolioSchema = new Schema<TPortfolio>(
       type: String,
       required: true,
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export const PortfolioModel = model<TPortfolio>("Portfolio", portfolioSchema);

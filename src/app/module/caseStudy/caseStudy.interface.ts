@@ -9,4 +9,5 @@ export interface TCaseStudy {
   link: string;
   serviceId?: string;
   icon?: string;
+  isActive?: boolean;
 }

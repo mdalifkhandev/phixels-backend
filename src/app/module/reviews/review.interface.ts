@@ -9,6 +9,6 @@ export type TReview = {
   duration: string;
   summary: string;
   position?: number;
+  isActive?: boolean;
   isDeleted?: boolean;
 };
-

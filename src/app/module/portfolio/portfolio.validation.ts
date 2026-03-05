@@ -26,6 +26,7 @@ const createPortfolioValidationSchema = z.object({
     liveLink: z.string({
       required_error: "Live link is required",
     }),
+    isActive: z.boolean().optional(),
   }),
 });
 
@@ -39,6 +40,7 @@ const updatePortfolioValidationSchema = z.object({
     activeUsers: z.string().optional(),
     image: z.string().optional(),
     liveLink: z.string().optional(),
+    isActive: z.boolean().optional(),
   }),
 });
 

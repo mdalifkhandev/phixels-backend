@@ -1,12 +1,12 @@
-import { Schema, model } from 'mongoose';
-import { TCareer } from './career.interface';
+import { Schema, model } from "mongoose";
+import { TCareer } from "./career.interface";
 
 const careerSchema = new Schema<TCareer>(
   {
     jobTitle: { type: String, required: true },
     jobType: {
       type: String,
-      enum: ['Full-time', 'Part-time', 'Remote', 'Contract', 'Internship'],
+      enum: ["Full-time", "Part-time", "Remote", "Contract", "Internship"],
       required: true,
     },
     location: { type: String, required: true },
@@ -18,6 +18,7 @@ const careerSchema = new Schema<TCareer>(
     applicationLink: { type: String },
     applicationEmail: { type: String },
     position: { type: Number, default: 0 },
+    isActive: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
   },
   {
@@ -26,14 +27,14 @@ const careerSchema = new Schema<TCareer>(
 );
 
 // Query Middleware to hide deleted documents
-careerSchema.pre('find', function (next) {
+careerSchema.pre("find", function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
 
-careerSchema.pre('findOne', function (next) {
+careerSchema.pre("findOne", function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
 
-export const CareerModel = model<TCareer>('Career', careerSchema);
+export const CareerModel = model<TCareer>("Career", careerSchema);

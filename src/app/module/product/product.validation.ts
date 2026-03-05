@@ -1,19 +1,20 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 const createProductValidationSchema = z.object({
   body: z.object({
-    name: z.string({ required_error: 'Name is required' }),
-    description: z.string({ required_error: 'Description is required' }),
+    name: z.string({ required_error: "Name is required" }),
+    description: z.string({ required_error: "Description is required" }),
     features: z.array(z.string()).optional(),
     pricing: z.number().optional(),
     demoLink: z.string().optional(),
     images: z.array(z.string()).optional(),
-    category: z.string({ required_error: 'Category is required' }),
+    category: z.string({ required_error: "Category is required" }),
     reviewRating: z.number().min(0).max(5).nullable().optional(),
     userCount: z.number().min(0).nullable().optional(),
     downloadsEnabled: z.boolean().optional(),
     downloadCount: z.number().min(0).nullable().optional(),
     position: z.number().optional(),
+    isActive: z.boolean().optional(),
   }),
 });
 
@@ -31,30 +32,39 @@ const updateProductValidationSchema = z.object({
     downloadsEnabled: z.boolean().optional(),
     downloadCount: z.number().min(0).nullable().optional(),
     isPinned: z.boolean().optional(),
-    pinOrder: z.union([z.literal(1), z.literal(2), z.literal(3), z.null()]).optional(),
+    pinOrder: z
+      .union([z.literal(1), z.literal(2), z.literal(3), z.null()])
+      .optional(),
     position: z.number().optional(),
+    isActive: z.boolean().optional(),
   }),
 });
 
 const updateProductPinValidationSchema = z.object({
   body: z
     .object({
-      isPinned: z.boolean({ required_error: 'isPinned is required' }),
-      pinOrder: z.union([z.literal(1), z.literal(2), z.literal(3), z.null()]).optional(),
+      isPinned: z.boolean({ required_error: "isPinned is required" }),
+      pinOrder: z
+        .union([z.literal(1), z.literal(2), z.literal(3), z.null()])
+        .optional(),
     })
     .superRefine((data, ctx) => {
       if (data.isPinned && data.pinOrder == null) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'pinOrder is required when isPinned is true',
-          path: ['pinOrder'],
+          message: "pinOrder is required when isPinned is true",
+          path: ["pinOrder"],
         });
       }
-      if (!data.isPinned && data.pinOrder !== undefined && data.pinOrder !== null) {
+      if (
+        !data.isPinned &&
+        data.pinOrder !== undefined &&
+        data.pinOrder !== null
+      ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'pinOrder must be null when isPinned is false',
-          path: ['pinOrder'],
+          message: "pinOrder must be null when isPinned is false",
+          path: ["pinOrder"],
         });
       }
     }),
@@ -62,7 +72,9 @@ const updateProductPinValidationSchema = z.object({
 
 const updateProductPositionsValidationSchema = z.object({
   body: z.object({
-    orderedIds: z.array(z.string({ required_error: 'orderedIds array of strings is required' })),
+    orderedIds: z.array(
+      z.string({ required_error: "orderedIds array of strings is required" }),
+    ),
   }),
 });
 

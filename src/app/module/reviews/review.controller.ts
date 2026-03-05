@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
-import httpStatus from 'http-status';
-import catchAsync from '../../utils/catchAsync';
-import sendResponse from '../../utils/sendResponse';
-import { ReviewServices } from './review.service';
+import { Request, Response } from "express";
+import httpStatus from "http-status";
+import catchAsync from "../../utils/catchAsync";
+import sendResponse from "../../utils/sendResponse";
+import { ReviewServices } from "./review.service";
 
 const createReview = catchAsync(async (req: Request, res: Response) => {
   if (req.file) {
@@ -13,18 +13,18 @@ const createReview = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Review created successfully',
+    message: "Review created successfully",
     data: result,
   });
 });
 
-const getAllReviews = catchAsync(async (_req: Request, res: Response) => {
-  const result = await ReviewServices.getAllReviewsFromDB();
+const getAllReviews = catchAsync(async (req: Request, res: Response) => {
+  const result = await ReviewServices.getAllReviewsFromDB(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Reviews retrieved successfully',
+    message: "Reviews retrieved successfully",
     data: result,
   });
 });
@@ -36,7 +36,7 @@ const getSingleReview = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Review retrieved successfully',
+    message: "Review retrieved successfully",
     data: result,
   });
 });
@@ -51,7 +51,7 @@ const updateReview = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Review updated successfully',
+    message: "Review updated successfully",
     data: result,
   });
 });
@@ -63,7 +63,7 @@ const deleteReview = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Review deleted successfully',
+    message: "Review deleted successfully",
     data: result,
   });
 });
@@ -73,7 +73,7 @@ const uploadReviewImage = catchAsync(async (req: Request, res: Response) => {
     sendResponse(res, {
       statusCode: httpStatus.BAD_REQUEST,
       success: false,
-      message: 'Image file is required',
+      message: "Image file is required",
       data: null,
     });
     return;
@@ -82,21 +82,25 @@ const uploadReviewImage = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Image uploaded successfully',
+    message: "Image uploaded successfully",
     data: { image: (req.file as any).path },
   });
 });
 
-const updateReviewPositions = catchAsync(async (req: Request, res: Response) => {
-  const result = await ReviewServices.updateReviewPositionsArray(req.body.orderedIds);
+const updateReviewPositions = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await ReviewServices.updateReviewPositionsArray(
+      req.body.orderedIds,
+    );
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Review positions updated successfully',
-    data: result,
-  });
-});
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Review positions updated successfully",
+      data: result,
+    });
+  },
+);
 
 export const ReviewController = {
   createReview,

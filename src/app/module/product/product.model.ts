@@ -1,5 +1,5 @@
-import { Schema, model } from 'mongoose';
-import { TProduct } from './product.interface';
+import { Schema, model } from "mongoose";
+import { TProduct } from "./product.interface";
 
 const productSchema = new Schema<TProduct>(
   {
@@ -17,6 +17,7 @@ const productSchema = new Schema<TProduct>(
     isPinned: { type: Boolean, default: false },
     pinOrder: { type: Number, enum: [1, 2, 3], default: null },
     position: { type: Number, default: 0 },
+    isActive: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
   },
   {
@@ -25,14 +26,14 @@ const productSchema = new Schema<TProduct>(
 );
 
 // Query Middleware to hide deleted documents
-productSchema.pre('find', function (next) {
+productSchema.pre("find", function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
 
-productSchema.pre('findOne', function (next) {
+productSchema.pre("findOne", function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
 
-export const ProductModel = model<TProduct>('Product', productSchema);
+export const ProductModel = model<TProduct>("Product", productSchema);

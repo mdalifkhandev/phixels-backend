@@ -1,6 +1,6 @@
 export type TCareer = {
   jobTitle: string;
-  jobType: 'Full-time' | 'Part-time' | 'Remote' | 'Contract' | 'Internship';
+  jobType: "Full-time" | "Part-time" | "Remote" | "Contract" | "Internship";
   location: string;
   description: string;
   requirements: string[];
@@ -10,5 +10,6 @@ export type TCareer = {
   applicationLink?: string;
   applicationEmail?: string;
   position?: number;
+  isActive?: boolean;
   isDeleted?: boolean;
 };

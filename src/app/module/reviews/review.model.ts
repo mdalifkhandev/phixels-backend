@@ -1,5 +1,5 @@
-import { Schema, model } from 'mongoose';
-import { TReview } from './review.interface';
+import { Schema, model } from "mongoose";
+import { TReview } from "./review.interface";
 
 const reviewSchema = new Schema<TReview>(
   {
@@ -13,6 +13,7 @@ const reviewSchema = new Schema<TReview>(
     duration: { type: String, required: true },
     summary: { type: String, required: true },
     position: { type: Number, default: 0 },
+    isActive: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
   },
   {
@@ -20,15 +21,14 @@ const reviewSchema = new Schema<TReview>(
   },
 );
 
-reviewSchema.pre('find', function (next) {
+reviewSchema.pre("find", function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
 
-reviewSchema.pre('findOne', function (next) {
+reviewSchema.pre("findOne", function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
 
-export const ReviewModel = model<TReview>('Review', reviewSchema);
-
+export const ReviewModel = model<TReview>("Review", reviewSchema);

@@ -1,13 +1,20 @@
-import { TReview } from './review.interface';
-import { ReviewModel } from './review.model';
+import { TReview } from "./review.interface";
+import { ReviewModel } from "./review.model";
 
 const createReviewIntoDB = async (payload: TReview) => {
   const result = await ReviewModel.create(payload);
   return result;
 };
 
-const getAllReviewsFromDB = async () => {
-  const result = await ReviewModel.find().sort({ position: 1, createdAt: -1 });
+const getAllReviewsFromDB = async (query: Record<string, unknown> = {}) => {
+  const filter: Record<string, any> = {};
+  if (query.all !== "true") {
+    filter.isActive = true;
+  }
+  const result = await ReviewModel.find(filter).sort({
+    position: 1,
+    createdAt: -1,
+  });
   return result;
 };
 
@@ -17,7 +24,9 @@ const getSingleReviewFromDB = async (id: string) => {
 };
 
 const updateReviewInDB = async (id: string, payload: Partial<TReview>) => {
-  const result = await ReviewModel.findByIdAndUpdate(id, payload, { new: true });
+  const result = await ReviewModel.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
   return result;
 };
 
@@ -31,7 +40,7 @@ const deleteReviewFromDB = async (id: string) => {
 };
 
 const updateReviewPositionsArray = async (orderedIds: string[]) => {
-  const { Types } = require('mongoose');
+  const { Types } = require("mongoose");
   const bulkOperations = orderedIds.map((id, index) => ({
     updateOne: {
       filter: { _id: new Types.ObjectId(id) },

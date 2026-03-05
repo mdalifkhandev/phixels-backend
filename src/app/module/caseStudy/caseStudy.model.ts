@@ -13,10 +13,11 @@ const caseStudySchema = new Schema<TCaseStudy>(
     link: { type: String, required: true },
     serviceId: { type: String, required: false },
     icon: { type: String, required: false },
+    isActive: { type: Boolean, default: true },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export const CaseStudyModel = model<TCaseStudy>("CaseStudy", caseStudySchema);
