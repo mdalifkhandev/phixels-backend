@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 const updateSettingsValidationSchema = z.object({
   body: z.object({
@@ -12,17 +12,9 @@ const updateSettingsValidationSchema = z.object({
         jobApplications: z.boolean().optional(),
       })
       .optional(),
-    account: z
-      .object({
-        fullName: z.string().optional(),
-        email: z.string().email().optional(),
-        twoFactorEnabled: z.boolean().optional(),
-      })
-      .optional(),
   }),
 });
 
 export const SettingsValidation = {
   updateSettingsValidationSchema,
 };
-

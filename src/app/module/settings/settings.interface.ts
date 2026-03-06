@@ -7,11 +7,4 @@ export type TSettings = {
     newsletter: boolean;
     jobApplications: boolean;
   };
-  account: {
-    fullName: string;
-    email: string;
-    twoFactorEnabled: boolean;
-    passwordLastChangedAt?: Date;
-  };
 };
-

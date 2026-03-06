@@ -1,20 +1,14 @@
-import { TSettings } from './settings.interface';
-import { SettingsModel } from './settings.model';
+import { TSettings } from "./settings.interface";
+import { SettingsModel } from "./settings.model";
 
 const defaultSettings = {
-  notificationRecipients: ['phixels.io@gmail.com'],
+  notificationRecipients: ["phixels.io@gmail.com"],
   alerts: {
     newLead: true,
     meetingBooked: true,
     contactMessages: true,
     newsletter: false,
     jobApplications: true,
-  },
-  account: {
-    fullName: 'Admin',
-    email: 'admin@phixels.com',
-    twoFactorEnabled: false,
-    passwordLastChangedAt: new Date(),
   },
 };
 
@@ -35,10 +29,6 @@ const updateSettingsInDB = async (payload: Partial<TSettings>) => {
       ...existing.alerts,
       ...(payload.alerts ?? {}),
     },
-    account: {
-      ...existing.account,
-      ...(payload.account ?? {}),
-    },
   };
 
   const result = await SettingsModel.findByIdAndUpdate(
@@ -53,4 +43,3 @@ export const SettingsServices = {
   getSettingsFromDB,
   updateSettingsInDB,
 };
-

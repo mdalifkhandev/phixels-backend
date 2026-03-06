@@ -8,4 +8,6 @@ export type TUser = {
   verificationCode?: string;
   resetPasswordCode?: string;
   resetPasswordCodeExpiresAt?: Date;
+  passwordLastChangedAt?: Date;
+  twoFactorEnabled: boolean;
 };

@@ -181,6 +181,7 @@ const resetPassword = async (payload: {
   user.password = await bcrypt.hash(payload.newPassword, 10);
   user.resetPasswordCode = undefined;
   user.resetPasswordCodeExpiresAt = undefined;
+  user.passwordLastChangedAt = new Date();
   await user.save();
 
   return { message: "Password reset successfully" };
@@ -205,6 +206,7 @@ const changePassword = async (payload: {
   }
 
   user.password = await bcrypt.hash(payload.newPassword, 10);
+  user.passwordLastChangedAt = new Date();
   await user.save();
 
   return { message: "Password changed successfully" };
