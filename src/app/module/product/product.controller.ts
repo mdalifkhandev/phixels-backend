@@ -4,9 +4,21 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { ProductServices } from "./product.service";
 import AppError from "../../error/appError";
+import { ActivityLogService } from "../activityLogs/activityLog.service";
+import { CustomRequest } from "../../Interface/request";
 
 const createProduct = catchAsync(async (req: Request, res: Response) => {
   const result = await ProductServices.createProductIntoDB(req.body);
+
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Created a new product: ${result.name}`,
+    });
+  }
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -52,6 +64,16 @@ const updateProduct = catchAsync(async (req: Request, res: Response) => {
     throw new AppError(httpStatus.NOT_FOUND, "Product not found");
   }
 
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user && result) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Updated product: ${result.name}`,
+    });
+  }
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -65,6 +87,16 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
   const result = await ProductServices.deleteProductFromDB(id as string);
   if (!result) {
     throw new AppError(httpStatus.NOT_FOUND, "Product not found");
+  }
+
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Deleted a product (ID: ${id})`,
+    });
   }
 
   sendResponse(res, {
@@ -96,6 +128,16 @@ const updateProductPin = catchAsync(async (req: Request, res: Response) => {
     throw new AppError(httpStatus.NOT_FOUND, "Product not found");
   }
 
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user && result) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Updated pin status for product: ${result.name}`,
+    });
+  }
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -109,6 +151,16 @@ const updateProductPositions = catchAsync(
     const result = await ProductServices.updateProductPositionsArray(
       req.body.orderedIds,
     );
+
+    // Log action
+    const user = (req as unknown as CustomRequest).user;
+    if (user) {
+      await ActivityLogService.createLog({
+        userName: user.name,
+        userEmail: user.email,
+        actionDescription: "Reordered product positions",
+      });
+    }
 
     sendResponse(res, {
       statusCode: httpStatus.OK,

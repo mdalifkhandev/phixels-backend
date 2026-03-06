@@ -1,147 +1,199 @@
 import catchAsync from "../../utils/catchAsync";
+import { ActivityLogService } from "../activityLogs/activityLog.service";
+import { CustomRequest } from "../../Interface/request";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { BlogService } from "./blog.service";
 import AppError from "../../error/appError";
 
 const uploadImage = catchAsync(async (req, res) => {
-    if (!req.file) {
-        throw new AppError(httpStatus.BAD_REQUEST, 'No image file provided');
-    }
-    const imageUrl = (req.file as any).path;
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: 'Image uploaded successfully',
-        data: { image: imageUrl },
-    });
+  if (!req.file) {
+    throw new AppError(httpStatus.BAD_REQUEST, "No image file provided");
+  }
+  const imageUrl = (req.file as any).path;
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Image uploaded successfully",
+    data: { image: imageUrl },
+  });
 });
 
 const createBlog = catchAsync(async (req, res) => {
-    // Check for uploaded image
-    if (req.file) {
-        req.body.image = (req.file as any).path;
-    }
+  // Check for uploaded image
+  if (req.file) {
+    req.body.image = (req.file as any).path;
+  }
 
-    const result = await BlogService.createBlog(req.body);
+  const result = await BlogService.createBlog(req.body);
 
-    sendResponse(res, {
-        statusCode: httpStatus.CREATED,
-        success: true,
-        message: "Blog created successfully",
-        data: result
+  // Log action
+  const user = (req as CustomRequest).user;
+  if (user) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Created a new blog: ${result.title}`,
     });
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Blog created successfully",
+    data: result,
+  });
 });
 
 const getAllBlogs = catchAsync(async (req, res) => {
-    const result = await BlogService.getAllBlogs();
+  const result = await BlogService.getAllBlogs();
 
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Blogs retrieved successfully",
-        data: result
-    });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Blogs retrieved successfully",
+    data: result,
+  });
 });
 
 const getSingleBlog = catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const result = await BlogService.getSingleBlog(id as string);
+  const { id } = req.params;
+  const result = await BlogService.getSingleBlog(id as string);
 
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Blog retrieved successfully",
-        data: result
-    });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Blog retrieved successfully",
+    data: result,
+  });
 });
 
 const getSingleBlogBySlug = catchAsync(async (req, res) => {
-    const { slug } = req.params;
-    const result = await BlogService.getSingleBlogBySlug(slug as string);
+  const { slug } = req.params;
+  const result = await BlogService.getSingleBlogBySlug(slug as string);
 
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Blog retrieved successfully",
-        data: result
-    });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Blog retrieved successfully",
+    data: result,
+  });
 });
 
 const getFeaturedBlogs = catchAsync(async (_req, res) => {
-    const result = await BlogService.getFeaturedBlogs();
+  const result = await BlogService.getFeaturedBlogs();
 
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Featured blogs retrieved successfully",
-        data: result
-    });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Featured blogs retrieved successfully",
+    data: result,
+  });
 });
 
 const updateBlog = catchAsync(async (req, res) => {
-    const { id } = req.params;
-    
-    // Check for uploaded image
-    if (req.file) {
-        req.body.image = (req.file as any).path;
-    }
+  const { id } = req.params;
 
-    const result = await BlogService.updateBlog(id as string, req.body);
+  // Check for uploaded image
+  if (req.file) {
+    req.body.image = (req.file as any).path;
+  }
 
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Blog updated successfully",
-        data: result
+  const result = await BlogService.updateBlog(id as string, req.body);
+
+  // Log action
+  const user = (req as CustomRequest).user;
+  if (user && result) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Updated blog: ${result.title}`,
     });
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Blog updated successfully",
+    data: result,
+  });
 });
 
 const deleteBlog = catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const result = await BlogService.deleteBlog(id as string);
+  const { id } = req.params;
+  const result = await BlogService.deleteBlog(id as string);
 
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Blog deleted successfully",
-        data: result
+  // Log action
+  const user = (req as CustomRequest).user;
+  if (user) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Deleted a blog (ID: ${id})`,
     });
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Blog deleted successfully",
+    data: result,
+  });
 });
 
 const updateBlogFeature = catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const result = await BlogService.updateFeatureStatus(id as string, req.body);
+  const { id } = req.params;
+  const result = await BlogService.updateFeatureStatus(id as string, req.body);
 
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Blog feature status updated successfully",
-        data: result
+  // Log action
+  const user = (req as CustomRequest).user;
+  if (user && result) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Updated feature status for blog: ${result.title}`,
     });
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Blog feature status updated successfully",
+    data: result,
+  });
 });
 
 const updateBlogPositions = catchAsync(async (req, res) => {
-    const { blogs } = req.body;
-    const result = await BlogService.updateBlogPositions(blogs);
+  const { blogs } = req.body;
+  const result = await BlogService.updateBlogPositions(blogs);
 
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Blog positions updated successfully",
-        data: result
+  // Log action
+  const user = (req as CustomRequest).user;
+  if (user) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: "Reordered blog positions",
     });
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Blog positions updated successfully",
+    data: result,
+  });
 });
 
 export const BlogController = {
-    createBlog,
-    getAllBlogs,
-    getSingleBlog,
-    getSingleBlogBySlug,
-    getFeaturedBlogs,
-    updateBlog,
-    deleteBlog,
-    updateBlogFeature,
-    updateBlogPositions,
-    uploadImage,
+  createBlog,
+  getAllBlogs,
+  getSingleBlog,
+  getSingleBlogBySlug,
+  getFeaturedBlogs,
+  updateBlog,
+  deleteBlog,
+  updateBlogFeature,
+  updateBlogPositions,
+  uploadImage,
 };

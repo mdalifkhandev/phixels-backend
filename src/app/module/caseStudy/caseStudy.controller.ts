@@ -3,9 +3,21 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { CaseStudyServices } from "./caseStudy.service";
+import { ActivityLogService } from "../activityLogs/activityLog.service";
+import { CustomRequest } from "../../Interface/request";
 
 const createCaseStudy = catchAsync(async (req: Request, res: Response) => {
   const result = await CaseStudyServices.createCaseStudyIntoDB(req.body);
+
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Created a new case study: ${result.title}`,
+    });
+  }
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -42,6 +54,16 @@ const updateCaseStudy = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id as string;
   const result = await CaseStudyServices.updateCaseStudyInDB(id, req.body);
 
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user && result) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Updated case study: ${result.title}`,
+    });
+  }
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -53,6 +75,16 @@ const updateCaseStudy = catchAsync(async (req: Request, res: Response) => {
 const deleteCaseStudy = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id as string;
   const result = await CaseStudyServices.deleteCaseStudyFromDB(id);
+
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Deleted a case study (ID: ${id})`,
+    });
+  }
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

@@ -3,12 +3,24 @@ import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { ReviewServices } from "./review.service";
+import { ActivityLogService } from "../activityLogs/activityLog.service";
+import { CustomRequest } from "../../Interface/request";
 
 const createReview = catchAsync(async (req: Request, res: Response) => {
   if (req.file) {
     req.body.image = (req.file as any).path;
   }
   const result = await ReviewServices.createReviewIntoDB(req.body);
+
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Created a new review for: ${result.name}`,
+    });
+  }
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -48,6 +60,16 @@ const updateReview = catchAsync(async (req: Request, res: Response) => {
   }
   const result = await ReviewServices.updateReviewInDB(id as string, req.body);
 
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user && result) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Updated review for: ${result.name}`,
+    });
+  }
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -59,6 +81,16 @@ const updateReview = catchAsync(async (req: Request, res: Response) => {
 const deleteReview = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await ReviewServices.deleteReviewFromDB(id as string);
+
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Deleted a review (ID: ${id})`,
+    });
+  }
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -92,6 +124,16 @@ const updateReviewPositions = catchAsync(
     const result = await ReviewServices.updateReviewPositionsArray(
       req.body.orderedIds,
     );
+
+    // Log action
+    const user = (req as unknown as CustomRequest).user;
+    if (user) {
+      await ActivityLogService.createLog({
+        userName: user.name,
+        userEmail: user.email,
+        actionDescription: "Reordered review positions",
+      });
+    }
 
     sendResponse(res, {
       statusCode: httpStatus.OK,

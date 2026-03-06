@@ -1,4 +1,5 @@
 import AppError from "../../error/appError";
+import { ActivityLogService } from "../activityLogs/activityLog.service";
 import { TUser } from "./auth.interface";
 import { User } from "./auth.model";
 import httpStatus from "http-status";
@@ -29,6 +30,7 @@ const userCreatedFromDB = async (data: TUser) => {
 
   const jwtPayloads = {
     email: data.email,
+    name: data.name,
     role: data.role,
   };
 
@@ -75,6 +77,7 @@ const loginUser = async (data: { email: string; password: string }) => {
 
   const jwtPayloads = {
     email: user.email,
+    name: user.name,
     role: user.role,
   };
   const hours = 48;
@@ -88,6 +91,13 @@ const loginUser = async (data: { email: string; password: string }) => {
   const datas = await User.findOne({ email: data.email }).select(
     "-password -verificationCode -__v",
   );
+
+  // Log successful login
+  await ActivityLogService.createLog({
+    userName: user.name,
+    userEmail: user.email,
+    actionDescription: "User logged into the dashboard",
+  });
 
   return {
     accessToken,

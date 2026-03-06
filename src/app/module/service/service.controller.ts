@@ -4,9 +4,21 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { ServiceServices } from "./service.service";
 import AppError from "../../error/appError";
+import { ActivityLogService } from "../activityLogs/activityLog.service";
+import { CustomRequest } from "../../Interface/request";
 
 const createService = catchAsync(async (req: Request, res: Response) => {
   const result = await ServiceServices.createServiceIntoDB(req.body);
+
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Created a new service: ${result.title}`,
+    });
+  }
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -52,6 +64,16 @@ const updateService = catchAsync(async (req: Request, res: Response) => {
     throw new AppError(httpStatus.NOT_FOUND, "Service not found");
   }
 
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user && result) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Updated service: ${result.title}`,
+    });
+  }
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -65,6 +87,16 @@ const deleteService = catchAsync(async (req: Request, res: Response) => {
   const result = await ServiceServices.deleteServiceFromDB(id as string);
   if (!result) {
     throw new AppError(httpStatus.NOT_FOUND, "Service not found");
+  }
+
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: `Deleted a service (ID: ${id})`,
+    });
   }
 
   sendResponse(res, {
@@ -89,6 +121,16 @@ const getServiceMenu = catchAsync(async (_req: Request, res: Response) => {
 const createServiceCategory = catchAsync(
   async (req: Request, res: Response) => {
     const result = await ServiceServices.createServiceCategoryIntoDB(req.body);
+
+    // Log action
+    const user = (req as unknown as CustomRequest).user;
+    if (user) {
+      await ActivityLogService.createLog({
+        userName: user.name,
+        userEmail: user.email,
+        actionDescription: `Created service category: ${result.name}`,
+      });
+    }
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -144,6 +186,16 @@ const updateServiceCategory = catchAsync(
       throw new AppError(httpStatus.NOT_FOUND, "Service category not found");
     }
 
+    // Log action
+    const user = (req as unknown as CustomRequest).user;
+    if (user && result) {
+      await ActivityLogService.createLog({
+        userName: user.name,
+        userEmail: user.email,
+        actionDescription: `Updated service category: ${result.name}`,
+      });
+    }
+
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -163,6 +215,16 @@ const deleteServiceCategory = catchAsync(
       throw new AppError(httpStatus.NOT_FOUND, "Service category not found");
     }
 
+    // Log action
+    const user = (req as unknown as CustomRequest).user;
+    if (user) {
+      await ActivityLogService.createLog({
+        userName: user.name,
+        userEmail: user.email,
+        actionDescription: `Deleted service category (ID: ${id})`,
+      });
+    }
+
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -177,6 +239,16 @@ const createServiceSubcategory = catchAsync(
     const result = await ServiceServices.createServiceSubcategoryIntoDB(
       req.body,
     );
+
+    // Log action
+    const user = (req as unknown as CustomRequest).user;
+    if (user) {
+      await ActivityLogService.createLog({
+        userName: user.name,
+        userEmail: user.email,
+        actionDescription: `Created service subcategory: ${result.name}`,
+      });
+    }
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -233,6 +305,16 @@ const updateServiceSubcategory = catchAsync(
       throw new AppError(httpStatus.NOT_FOUND, "Service subcategory not found");
     }
 
+    // Log action
+    const user = (req as unknown as CustomRequest).user;
+    if (user && result) {
+      await ActivityLogService.createLog({
+        userName: user.name,
+        userEmail: user.email,
+        actionDescription: `Updated service subcategory: ${result.name}`,
+      });
+    }
+
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -250,6 +332,16 @@ const deleteServiceSubcategory = catchAsync(
     );
     if (!result) {
       throw new AppError(httpStatus.NOT_FOUND, "Service subcategory not found");
+    }
+
+    // Log action
+    const user = (req as unknown as CustomRequest).user;
+    if (user) {
+      await ActivityLogService.createLog({
+        userName: user.name,
+        userEmail: user.email,
+        actionDescription: `Deleted service subcategory (ID: ${id})`,
+      });
     }
 
     sendResponse(res, {
@@ -283,6 +375,16 @@ const reorderServiceCategories = catchAsync(
       orderedIds as string[],
     );
 
+    // Log action
+    const user = (req as unknown as CustomRequest).user;
+    if (user) {
+      await ActivityLogService.createLog({
+        userName: user.name,
+        userEmail: user.email,
+        actionDescription: "Reordered service categories",
+      });
+    }
+
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -299,6 +401,16 @@ const reorderServiceSubcategories = catchAsync(
       categoryId as string,
       orderedIds as string[],
     );
+
+    // Log action
+    const user = (req as unknown as CustomRequest).user;
+    if (user) {
+      await ActivityLogService.createLog({
+        userName: user.name,
+        userEmail: user.email,
+        actionDescription: "Reordered service subcategories",
+      });
+    }
 
     sendResponse(res, {
       statusCode: httpStatus.OK,

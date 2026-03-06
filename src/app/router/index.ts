@@ -12,6 +12,7 @@ import { ReviewRouter } from "../module/reviews/review.route";
 import { SettingsRouter } from "../module/settings/settings.route";
 import { AuthorRouter } from "../module/author/author.route";
 import { UserRouter } from "../module/users/user.route";
+import { ActivityLogRouter } from "../module/activityLogs/activityLog.route";
 
 const router = Router();
 
@@ -67,6 +68,10 @@ const moduleRought = [
   {
     path: "/users",
     route: UserRouter,
+  },
+  {
+    path: "/activity-logs",
+    route: ActivityLogRouter,
   },
 ];
 
