@@ -10,7 +10,7 @@ const userCreated = catchAsync(async (req, res) => {
     httpOnly: true,
     secure: config.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: 100 * 1000, // 100 seconds
+    maxAge: 100 * 1000, //100 seconds
   });
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
