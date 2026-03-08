@@ -14,6 +14,7 @@ const caseStudySchema = new Schema<TCaseStudy>(
     serviceId: { type: String, required: false },
     icon: { type: String, required: false },
     isActive: { type: Boolean, default: true },
+    sortOrder: { type: Number, default: 0 },
   },
   {
     timestamps: true,

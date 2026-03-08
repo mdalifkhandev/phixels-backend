@@ -44,7 +44,14 @@ const updatePortfolioValidationSchema = z.object({
   }),
 });
 
+const reorderPortfolioValidationSchema = z.object({
+  body: z.object({
+    orderedIds: z.array(z.string()),
+  }),
+});
+
 export const PortfolioValidation = {
   createPortfolioValidationSchema,
   updatePortfolioValidationSchema,
+  reorderPortfolioValidationSchema,
 };

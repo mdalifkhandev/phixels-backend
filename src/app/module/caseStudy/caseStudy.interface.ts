@@ -10,4 +10,5 @@ export interface TCaseStudy {
   serviceId?: string;
   icon?: string;
   isActive?: boolean;
+  sortOrder?: number;
 }

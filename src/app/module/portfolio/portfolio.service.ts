@@ -11,7 +11,7 @@ const getAllPortfoliosFromDB = async (query: Record<string, unknown> = {}) => {
   if (query.all !== "true") {
     filter.isActive = true;
   }
-  const result = await PortfolioModel.find(filter);
+  const result = await PortfolioModel.find(filter).sort({ sortOrder: 1 });
   return result;
 };
 
@@ -29,10 +29,23 @@ const updatePortfolioInDB = async (
   });
   return result;
 };
-
 const deletePortfolioFromDB = async (id: string) => {
   const result = await PortfolioModel.findByIdAndDelete(id);
   return result;
+};
+
+const reorderPortfolioInDB = async (orderedIds: string[]) => {
+  const bulkOps = orderedIds.map((id, index) => ({
+    updateOne: {
+      filter: { _id: id as any },
+      update: { sortOrder: index },
+    },
+  }));
+
+  await PortfolioModel.bulkWrite(bulkOps as any);
+  return await PortfolioModel.find({ _id: { $in: orderedIds } }).sort({
+    sortOrder: 1,
+  });
 };
 
 export const PortfolioServices = {
@@ -41,4 +54,5 @@ export const PortfolioServices = {
   getSinglePortfolioFromDB,
   updatePortfolioInDB,
   deletePortfolioFromDB,
+  reorderPortfolioInDB,
 };

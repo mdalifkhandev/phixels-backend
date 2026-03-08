@@ -8,4 +8,5 @@ export interface TPortfolio {
   image: string;
   liveLink: string;
   isActive?: boolean;
+  sortOrder?: number;
 }

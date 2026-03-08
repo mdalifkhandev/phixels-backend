@@ -94,10 +94,55 @@ const deletePortfolio = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const reorderPortfolio = catchAsync(async (req: Request, res: Response) => {
+  const { orderedIds } = req.body;
+  const result = await PortfolioServices.reorderPortfolioInDB(
+    orderedIds as string[],
+  );
+
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: "Reordered portfolios",
+    });
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Portfolios reordered successfully",
+    data: result,
+  });
+});
+
+const uploadPortfolioImage = catchAsync(async (req: Request, res: Response) => {
+  if (!req.file) {
+    sendResponse(res, {
+      statusCode: httpStatus.BAD_REQUEST,
+      success: false,
+      message: "Image file is required",
+      data: null,
+    });
+    return;
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Portfolio image uploaded successfully",
+    data: { image: (req.file as any).path },
+  });
+});
+
 export const PortfolioController = {
   createPortfolio,
   getAllPortfolios,
   getSinglePortfolio,
   updatePortfolio,
   deletePortfolio,
+  reorderPortfolio,
+  uploadPortfolioImage,
 };

@@ -94,10 +94,55 @@ const deleteCaseStudy = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const reorderCaseStudy = catchAsync(async (req: Request, res: Response) => {
+  const { orderedIds } = req.body;
+  const result = await CaseStudyServices.reorderCaseStudiesInDB(
+    orderedIds as string[],
+  );
+
+  // Log action
+  const user = (req as unknown as CustomRequest).user;
+  if (user) {
+    await ActivityLogService.createLog({
+      userName: user.name,
+      userEmail: user.email,
+      actionDescription: "Reordered case studies",
+    });
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Case Studies reordered successfully",
+    data: result,
+  });
+});
+
+const uploadCaseStudyImage = catchAsync(async (req: Request, res: Response) => {
+  if (!req.file) {
+    sendResponse(res, {
+      statusCode: httpStatus.BAD_REQUEST,
+      success: false,
+      message: "Image file is required",
+      data: null,
+    });
+    return;
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Case Study image uploaded successfully",
+    data: { image: (req.file as any).path },
+  });
+});
+
 export const CaseStudyController = {
   createCaseStudy,
   getAllCaseStudies,
   getSingleCaseStudy,
   updateCaseStudy,
   deleteCaseStudy,
+  reorderCaseStudy,
+  uploadCaseStudyImage,
 };

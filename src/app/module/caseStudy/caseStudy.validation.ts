@@ -32,7 +32,14 @@ const updateCaseStudyValidationSchema = z.object({
   }),
 });
 
+const reorderCaseStudyValidationSchema = z.object({
+  body: z.object({
+    orderedIds: z.array(z.string()),
+  }),
+});
+
 export const CaseStudyValidation = {
   createCaseStudyValidationSchema,
   updateCaseStudyValidationSchema,
+  reorderCaseStudyValidationSchema,
 };

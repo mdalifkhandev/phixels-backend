@@ -39,6 +39,10 @@ const portfolioSchema = new Schema<TPortfolio>(
       type: Boolean,
       default: true,
     },
+    sortOrder: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

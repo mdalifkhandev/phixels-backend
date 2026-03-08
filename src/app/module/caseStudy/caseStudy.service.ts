@@ -11,7 +11,7 @@ const getAllCaseStudiesFromDB = async (query: Record<string, unknown> = {}) => {
   if (query.all !== "true") {
     filter.isActive = true;
   }
-  const result = await CaseStudyModel.find(filter);
+  const result = await CaseStudyModel.find(filter).sort({ sortOrder: 1 });
   return result;
 };
 
@@ -35,10 +35,25 @@ const deleteCaseStudyFromDB = async (id: string) => {
   return result;
 };
 
+const reorderCaseStudiesInDB = async (orderedIds: string[]) => {
+  const bulkOps = orderedIds.map((id, index) => ({
+    updateOne: {
+      filter: { _id: id as any },
+      update: { sortOrder: index },
+    },
+  }));
+
+  await CaseStudyModel.bulkWrite(bulkOps as any);
+  return await CaseStudyModel.find({ _id: { $in: orderedIds } }).sort({
+    sortOrder: 1,
+  });
+};
+
 export const CaseStudyServices = {
   createCaseStudyIntoDB,
   getAllCaseStudiesFromDB,
   getSingleCaseStudyFromDB,
   updateCaseStudyInDB,
   deleteCaseStudyFromDB,
+  reorderCaseStudiesInDB,
 };
