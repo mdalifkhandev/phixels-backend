@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { TUserRole } from "../Interface/types";
+import { TUserRole, USER_ROLE } from "../Interface/types";
 import { CustomRequest } from "../Interface/request";
 import catchAsync from "../utils/catchAsync";
 import AppError from "../error/appError";
@@ -29,13 +29,7 @@ const auth = (...requiredRole: TUserRole[]) => {
       config.JWT_SECRET as string,
     ) as JwtPayload;
 
-    const { email, role, iat, exp } = decoded;
-    if (requiredRole && !requiredRole.includes(role)) {
-      throw new AppError(
-        httpStatus.FORBIDDEN,
-        "You are not allowed to access this route",
-      );
-    }
+    const { email, role } = decoded;
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -50,6 +44,18 @@ const auth = (...requiredRole: TUserRole[]) => {
       throw new AppError(
         httpStatus.BAD_REQUEST,
         "Please verify your email first",
+      );
+    }
+
+    // Role-based authorization
+    if (
+      role !== USER_ROLE.super_admin &&
+      requiredRole.length > 0 &&
+      !requiredRole.includes(role as TUserRole)
+    ) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "You are not allowed to access this route",
       );
     }
 
