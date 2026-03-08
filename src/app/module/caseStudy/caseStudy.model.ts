@@ -10,7 +10,7 @@ const caseStudySchema = new Schema<TCaseStudy>(
     solution: { type: String, required: true },
     result: { type: String, required: true },
     image: { type: String, required: true },
-    link: { type: String, required: true },
+    link: { type: String, required: false, default: "" },
     serviceId: { type: String, required: false },
     icon: { type: String, required: false },
     isActive: { type: Boolean, default: true },
