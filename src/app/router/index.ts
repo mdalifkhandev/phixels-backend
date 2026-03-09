@@ -15,6 +15,7 @@ import { UserRouter } from "../module/users/user.route";
 import { ActivityLogRouter } from "../module/activityLogs/activityLog.route";
 import { AboutContentRoutes } from "../module/aboutContent/aboutContent.route";
 import { TeamMemberRouter } from "../module/teamMember/teamMember.route";
+import { PageMetricsRoutes } from "../module/pageMetrics/pageMetrics.route";
 
 const router = Router();
 
@@ -82,6 +83,10 @@ const moduleRought = [
   {
     path: "/team-members",
     route: TeamMemberRouter,
+  },
+  {
+    path: "/page-metrics",
+    route: PageMetricsRoutes,
   },
 ];
 
