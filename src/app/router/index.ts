@@ -13,6 +13,8 @@ import { SettingsRouter } from "../module/settings/settings.route";
 import { AuthorRouter } from "../module/author/author.route";
 import { UserRouter } from "../module/users/user.route";
 import { ActivityLogRouter } from "../module/activityLogs/activityLog.route";
+import { AboutContentRoutes } from "../module/aboutContent/aboutContent.route";
+import { TeamMemberRouter } from "../module/teamMember/teamMember.route";
 
 const router = Router();
 
@@ -72,6 +74,14 @@ const moduleRought = [
   {
     path: "/activity-logs",
     route: ActivityLogRouter,
+  },
+  {
+    path: "/about-content",
+    route: AboutContentRoutes,
+  },
+  {
+    path: "/team-members",
+    route: TeamMemberRouter,
   },
 ];
 
