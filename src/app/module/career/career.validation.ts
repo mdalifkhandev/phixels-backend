@@ -17,7 +17,7 @@ const createCareerValidationSchema = z.object({
       .optional()
       .transform((str) => (str ? new Date(str) : undefined)),
     applicationLink: z.string().optional(),
-    applicationEmail: z.string().email().optional(),
+    applicationEmail: z.union([z.literal(""), z.string().email()]).optional(),
     position: z.number().optional(),
     isActive: z.boolean().optional(),
   }),
@@ -39,7 +39,7 @@ const updateCareerValidationSchema = z.object({
       .optional()
       .transform((str) => (str ? new Date(str) : undefined)),
     applicationLink: z.string().optional(),
-    applicationEmail: z.string().email().optional(),
+    applicationEmail: z.union([z.literal(""), z.string().email()]).optional(),
     position: z.number().optional(),
     isActive: z.boolean().optional(),
   }),
