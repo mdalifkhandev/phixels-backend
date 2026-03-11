@@ -17,10 +17,15 @@ import { AboutContentRoutes } from "../module/aboutContent/aboutContent.route";
 import { TeamMemberRouter } from "../module/teamMember/teamMember.route";
 import { PageMetricsRoutes } from "../module/pageMetrics/pageMetrics.route";
 import { LegalContentRoutes } from "../module/legalContent/legalContent.route";
+import { SitemapRouter } from "../module/sitemap/sitemap.route";
 
 const router = Router();
 
 const moduleRought = [
+  {
+    path: "/",
+    route: SitemapRouter,
+  },
   {
     path: "/auth",
     route: AuthRouter,
