@@ -3,6 +3,7 @@ import {
   AboutContentDocument,
   TMetric,
   TPhilosophy,
+  TClient,
 } from "./aboutContent.interface";
 
 const metricSchema = new Schema<TMetric>({
@@ -26,6 +27,11 @@ const contactInfoSchema = new Schema({
   facebook: { type: String, default: "" },
   phone: { type: String, default: "" },
   address: { type: String, default: "" },
+});
+
+const clientSchema = new Schema<TClient>({
+  name: { type: String, required: true },
+  logo: { type: String, required: true },
 });
 
 const aboutContentSchema = new Schema<AboutContentDocument>(
@@ -52,6 +58,7 @@ const aboutContentSchema = new Schema<AboutContentDocument>(
         address: "",
       },
     },
+    clients: { type: [clientSchema], default: [] },
   },
   { timestamps: true },
 );

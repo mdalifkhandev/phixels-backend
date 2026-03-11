@@ -23,10 +23,16 @@ export type TContactInfo = {
   address: string;
 };
 
+export type TClient = {
+  name: string;
+  logo: string;
+};
+
 export type TAboutContent = {
   metrics: TMetric[];
   philosophy: TPhilosophy;
   contactInfo: TContactInfo;
+  clients: TClient[];
 };
 
 export interface AboutContentDocument extends TAboutContent, Document {}
