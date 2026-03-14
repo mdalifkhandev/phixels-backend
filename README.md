@@ -2,6 +2,8 @@
 
 The Phixels.io Backend is the high-performance engine powering both the company's public website and its content management system. It provides a robust, secure, and developer-friendly API for managing enterprise digital content.
 
+- **Live API**: [phixels-backend.vercel.app](https://phixels-backend.vercel.app)
+
 ---
 
 ## 🎯 Purpose and Vision
