@@ -420,8 +420,30 @@ const getRealtimeFromDB = async () => {
     .sort({ eventAt: -1 })
     .limit(100);
 
-  const sessionIds = new Set(events.map((event) => event.sessionId));
-  const activeUsers = sessionIds.size;
+  const sessionIds = Array.from(new Set(events.map((event) => event.sessionId)));
+  const activeUsers = sessionIds.length;
+
+  // Fetch the first event for each session to calculate total duration
+  const firstEvents = await AnalyticsEvent.aggregate([
+    { $match: { sessionId: { $in: sessionIds } } },
+    { $group: { _id: "$sessionId", firstEventAt: { $min: "$eventAt" } } },
+  ]);
+
+  const firstEventMap = firstEvents.reduce(
+    (acc, item) => {
+      acc[item._id] = new Date(item.firstEventAt);
+      return acc;
+    },
+    {} as Record<string, Date>,
+  );
+
+  const formatDuration = (start: Date, end: Date) => {
+    const diffSeconds = Math.floor((end.getTime() - start.getTime()) / 1000);
+    if (diffSeconds < 60) return `${diffSeconds}s`;
+    const mins = Math.floor(diffSeconds / 60);
+    const secs = diffSeconds % 60;
+    return `${mins}m ${secs}s`;
+  };
 
   const deviceCounts = events.reduce(
     (acc, event) => {
@@ -441,16 +463,30 @@ const getRealtimeFromDB = async () => {
     {} as Record<string, number>,
   );
 
-  const liveEvents = events.map((event) => ({
-    event: event.pagePath ? `Page View: ${event.pagePath}` : event.eventType,
-    location:
-      event.city && event.country
-        ? `${event.city}, ${event.country}`
-        : event.country || "Unknown",
-    device: event.deviceType ?? "unknown",
-    time: formatTimeAgo(event.eventAt),
-    activity: event.eventType.replace(/_/g, " "),
-  }));
+  const liveEvents = events.map((event) => {
+    const firstEventAt = firstEventMap[event.sessionId] || event.eventAt;
+    const device = (event.deviceType || "unknown").toLowerCase();
+    const normalizedDevice =
+      device === "desktop"
+        ? "Desktop"
+        : device === "mobile"
+          ? "Mobile"
+          : device === "tablet"
+            ? "Tablet"
+            : "Desktop";
+
+    return {
+      event: event.pagePath ? `Page View: ${event.pagePath}` : event.eventType,
+      location:
+        event.city && event.country
+          ? `${event.city}, ${event.country}`
+          : event.country || "Unknown",
+      device: normalizedDevice,
+      duration: formatDuration(firstEventAt, event.eventAt),
+      time: formatTimeAgo(event.eventAt),
+      activity: event.eventType.replace(/_/g, " "),
+    };
+  });
 
   return {
     activeUsers,

@@ -3,6 +3,7 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { AnalyticsServices } from './analytics.service';
+import geoip from 'geoip-lite';
 
 const createEvents = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body?.events ?? req.body;
@@ -16,8 +17,26 @@ const createEvents = catchAsync(async (req: Request, res: Response) => {
     });
     return;
   }
+
+  // Get client IP address
+  let ip = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || '';
+  if (ip.includes(',')) {
+    ip = ip.split(',')[0].trim();
+  }
+
+  // Basic cleanup for IPv6 mapped IPv4 addresses
+  if (ip.startsWith('::ffff:')) {
+    ip = ip.substring(7);
+  }
+
+  const geo = geoip.lookup(ip);
+  const city = geo?.city || 'Unknown';
+  const country = geo?.country || 'Unknown';
+
   const normalized = events.map((event) => ({
     ...event,
+    city: event.city || city,
+    country: event.country || country,
     eventAt: event.eventAt ? new Date(event.eventAt) : new Date(),
   }));
 
