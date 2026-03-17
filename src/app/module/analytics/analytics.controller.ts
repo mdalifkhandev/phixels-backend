@@ -29,11 +29,24 @@ const createEvents = catchAsync(async (req: Request, res: Response) => {
     ip = ip.substring(7);
   }
 
-  const geo = geoip.lookup(ip);
-  const city = geo?.city || 'Unknown';
-  const country = geo?.country || 'Unknown';
+  // Mock IP for local development if it's 127.0.0.1 or ::1
+  const isLocal = ip === '127.0.0.1' || ip === '::1' || ip === 'localhost';
+  
+  let city = 'Unknown';
+  let country = 'Unknown';
 
-  const normalized = events.map((event) => ({
+  if (isLocal) {
+    city = 'Dhaka (Dev)';
+    country = 'BD';
+  } else {
+    const geo = geoip.lookup(ip);
+    if (geo) {
+      city = geo.city || 'Unknown';
+      country = geo.country || 'Unknown';
+    }
+  }
+
+  const normalized = events.map((event: any) => ({
     ...event,
     city: event.city || city,
     country: event.country || country,
