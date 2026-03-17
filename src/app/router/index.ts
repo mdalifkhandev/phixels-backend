@@ -18,7 +18,6 @@ import { TeamMemberRouter } from "../module/teamMember/teamMember.route";
 import { PageMetricsRoutes } from "../module/pageMetrics/pageMetrics.route";
 import { LegalContentRoutes } from "../module/legalContent/legalContent.route";
 import { SitemapRouter } from "../module/sitemap/sitemap.route";
-import { PageContentRoutes } from "../module/pageContent/pageContent.route";
 
 const router = Router();
 
@@ -98,10 +97,6 @@ const moduleRought = [
   {
     path: "/legal-content",
     route: LegalContentRoutes,
-  },
-  {
-    path: "/page-content",
-    route: PageContentRoutes,
   },
 ];
 
