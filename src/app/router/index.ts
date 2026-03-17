@@ -18,6 +18,7 @@ import { TeamMemberRouter } from "../module/teamMember/teamMember.route";
 import { PageMetricsRoutes } from "../module/pageMetrics/pageMetrics.route";
 import { LegalContentRoutes } from "../module/legalContent/legalContent.route";
 import { SitemapRouter } from "../module/sitemap/sitemap.route";
+import { UploadRouter } from "../module/upload/upload.route";
 
 const router = Router();
 
@@ -97,6 +98,10 @@ const moduleRought = [
   {
     path: "/legal-content",
     route: LegalContentRoutes,
+  },
+  {
+    path: "/upload",
+    route: UploadRouter,
   },
 ];
 
