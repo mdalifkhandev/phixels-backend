@@ -1,5 +1,5 @@
-import nodemailer from 'nodemailer';
-import config from '../../config';
+import nodemailer from "nodemailer";
+import config from "../../config";
 
 // Email configuration interface
 export interface EmailOptions {
@@ -20,9 +20,9 @@ export interface EmailOptions {
 // Create reusable transporter
 const createTransporter = () => {
   return nodemailer.createTransport({
-    host: config.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(config.SMTP_PORT || '587'),
-    secure: config.SMTP_SECURE === 'true', // true for 465, false for other ports
+    host: config.SMTP_HOST || "smtp.gmail.com",
+    port: parseInt(config.SMTP_PORT || "587"),
+    secure: config.SMTP_SECURE === "true", // true for 465, false for other ports
     auth: {
       user: config.NODE_MILER_USER,
       pass: config.NODE_MILER_PASS,
@@ -37,26 +37,38 @@ export const SendMail = async (options: EmailOptions): Promise<boolean> => {
 
     const mailOptions = {
       from: options.from || config.NODE_MILER_USER,
-      to: Array.isArray(options.to) ? options.to.join(', ') : options.to,
+      to: Array.isArray(options.to) ? options.to.join(", ") : options.to,
       subject: options.subject,
       text: options.text,
       html: options.html,
-      cc: options.cc ? (Array.isArray(options.cc) ? options.cc.join(', ') : options.cc) : undefined,
-      bcc: options.bcc ? (Array.isArray(options.bcc) ? options.bcc.join(', ') : options.bcc) : undefined,
+      cc: options.cc
+        ? Array.isArray(options.cc)
+          ? options.cc.join(", ")
+          : options.cc
+        : undefined,
+      bcc: options.bcc
+        ? Array.isArray(options.bcc)
+          ? options.bcc.join(", ")
+          : options.bcc
+        : undefined,
       attachments: options.attachments,
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully:', info.messageId);
+    console.log("Email sent successfully:", info.messageId);
     return true;
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error("Error sending email:", error);
     return false;
   }
 };
 
 // Generate formal HTML email template
-export const getFormalEmailHtml = (subject: string, text: string, details?: string): string => {
+export const getFormalEmailHtml = (
+  subject: string,
+  text: string,
+  details?: string,
+): string => {
   return `
     <!DOCTYPE html>
     <html>
@@ -134,12 +146,16 @@ export const getFormalEmailHtml = (subject: string, text: string, details?: stri
             <div class="content">
                 <h2>${subject}</h2>
                 <p>${text}</p>
-                ${details ? `
+                ${
+                  details
+                    ? `
                     <div class="details-section">
                         <h3>Additional Details</h3>
                         <p>${details}</p>
                     </div>
-                ` : ''}
+                `
+                    : ""
+                }
             </div>
             <div class="footer">
                 <p>&copy; ${new Date().getFullYear()} Phixels.io. All rights reserved.</p>
@@ -152,13 +168,17 @@ export const getFormalEmailHtml = (subject: string, text: string, details?: stri
 };
 
 // Generate formal plain text email template
-export const getFormalEmailText = (subject: string, text: string, details?: string): string => {
+export const getFormalEmailText = (
+  subject: string,
+  text: string,
+  details?: string,
+): string => {
   return `
 ${subject}
 
 ${text}
 
-${details ? `Additional Details:\n${details}` : ''}
+${details ? `Additional Details:\n${details}` : ""}
 
 ---
 © ${new Date().getFullYear()} Phixels.io. All rights reserved.

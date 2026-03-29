@@ -1,6 +1,6 @@
-import { Types } from 'mongoose';
-import { TAuthor } from './author.interface';
-import { AuthorModel } from './author.model';
+import { Types } from "mongoose";
+import { TAuthor } from "./author.interface";
+import { AuthorModel } from "./author.model";
 
 const createAuthorIntoDB = async (payload: TAuthor) => {
   return AuthorModel.create(payload);

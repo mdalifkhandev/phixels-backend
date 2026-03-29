@@ -1,5 +1,5 @@
-import { Schema, model } from 'mongoose';
-import { TAnalyticsEvent } from './analytics.interface';
+import { Schema, model } from "mongoose";
+import { TAnalyticsEvent } from "./analytics.interface";
 
 const analyticsEventSchema = new Schema<TAnalyticsEvent>(
   {
@@ -10,7 +10,7 @@ const analyticsEventSchema = new Schema<TAnalyticsEvent>(
     utmSource: { type: String },
     utmMedium: { type: String },
     utmCampaign: { type: String },
-    deviceType: { type: String, default: 'unknown' },
+    deviceType: { type: String, default: "unknown" },
     country: { type: String },
     city: { type: String },
     channel: { type: String },
@@ -25,6 +25,6 @@ const analyticsEventSchema = new Schema<TAnalyticsEvent>(
 analyticsEventSchema.index({ eventAt: -1, eventType: 1 });
 
 export const AnalyticsEvent = model<TAnalyticsEvent>(
-  'AnalyticsEvent',
+  "AnalyticsEvent",
   analyticsEventSchema,
 );

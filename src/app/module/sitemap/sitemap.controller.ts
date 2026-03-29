@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { Blog } from "../blogs/blog.model";
-import { ServiceCategoryModel, ServiceSubcategoryModel } from "../service/service.model";
+import {
+  ServiceCategoryModel,
+  ServiceSubcategoryModel,
+} from "../service/service.model";
 import { ProductModel } from "../product/product.model";
 import { CaseStudyModel } from "../caseStudy/caseStudy.model";
 import { CareerModel } from "../career/career.model";
@@ -9,14 +12,23 @@ const BASE_URL = "https://phixels.agency";
 
 const generateSitemap = async (req: Request, res: Response) => {
   try {
-    const [blogs, categories, subcategories, products, caseStudies, careers] = await Promise.all([
-      Blog.find({ status: "published" }).select("slug _id updatedAt"),
-      ServiceCategoryModel.find({ isDeleted: false, isActive: true }).select("slug updatedAt"),
-      ServiceSubcategoryModel.find({ isDeleted: false, isActive: true }).populate("categoryId").select("slug categoryId updatedAt"),
-      ProductModel.find({ isDeleted: false, isActive: true }).select("_id updatedAt"),
-      CaseStudyModel.find({ isActive: true }).select("_id updatedAt"),
-      CareerModel.find({ isDeleted: false, isActive: true }).select("_id updatedAt"),
-    ]);
+    const [blogs, categories, subcategories, products, caseStudies, careers] =
+      await Promise.all([
+        Blog.find({ status: "published" }).select("slug _id updatedAt"),
+        ServiceCategoryModel.find({ isDeleted: false, isActive: true }).select(
+          "slug updatedAt",
+        ),
+        ServiceSubcategoryModel.find({ isDeleted: false, isActive: true })
+          .populate("categoryId")
+          .select("slug categoryId updatedAt"),
+        ProductModel.find({ isDeleted: false, isActive: true }).select(
+          "_id updatedAt",
+        ),
+        CaseStudyModel.find({ isActive: true }).select("_id updatedAt"),
+        CareerModel.find({ isDeleted: false, isActive: true }).select(
+          "_id updatedAt",
+        ),
+      ]);
 
     const staticPages = [
       "",

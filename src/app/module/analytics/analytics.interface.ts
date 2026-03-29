@@ -6,7 +6,7 @@ export type TAnalyticsEvent = {
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
-  deviceType?: 'desktop' | 'mobile' | 'tablet' | 'bot' | 'unknown';
+  deviceType?: "desktop" | "mobile" | "tablet" | "bot" | "unknown";
   country?: string;
   city?: string;
   channel?: string;

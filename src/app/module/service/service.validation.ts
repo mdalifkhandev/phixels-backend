@@ -1,19 +1,19 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const iconKeys = [
-  'code',
-  'smartphone',
-  'globe',
-  'cpu',
-  'palette',
-  'bar-chart',
-  'shield',
-  'cloud',
-  'zap',
-  'blocks',
-  'building2',
-  'brain',
+  "code",
+  "smartphone",
+  "globe",
+  "cpu",
+  "palette",
+  "bar-chart",
+  "shield",
+  "cloud",
+  "zap",
+  "blocks",
+  "building2",
+  "brain",
 ] as const;
 
 const seoSchema = z
@@ -25,8 +25,8 @@ const seoSchema = z
   .optional();
 
 const faqSchema = z.object({
-  question: z.string({ required_error: 'FAQ question is required' }),
-  answer: z.string({ required_error: 'FAQ answer is required' }),
+  question: z.string({ required_error: "FAQ question is required" }),
+  answer: z.string({ required_error: "FAQ answer is required" }),
 });
 
 const ctaSchema = z
@@ -39,9 +39,9 @@ const ctaSchema = z
 
 const createServiceValidationSchema = z.object({
   body: z.object({
-    title: z.string({ required_error: 'Title is required' }),
-    description: z.string({ required_error: 'Description is required' }),
-    icon: z.string({ required_error: 'Icon is required' }),
+    title: z.string({ required_error: "Title is required" }),
+    description: z.string({ required_error: "Description is required" }),
+    icon: z.string({ required_error: "Icon is required" }),
     features: z.array(z.string()).optional(),
     images: z.array(z.string()).optional(),
   }),
@@ -59,12 +59,12 @@ const updateServiceValidationSchema = z.object({
 
 const createServiceCategoryValidationSchema = z.object({
   body: z.object({
-    name: z.string({ required_error: 'Name is required' }),
+    name: z.string({ required_error: "Name is required" }),
     slug: z
-      .string({ required_error: 'Slug is required' })
-      .regex(slugRegex, 'Slug must be lowercase and hyphen-separated'),
-    description: z.string({ required_error: 'Description is required' }),
-    iconKey: z.enum(iconKeys, { required_error: 'Icon key is required' }),
+      .string({ required_error: "Slug is required" })
+      .regex(slugRegex, "Slug must be lowercase and hyphen-separated"),
+    description: z.string({ required_error: "Description is required" }),
+    iconKey: z.enum(iconKeys, { required_error: "Icon key is required" }),
     heroImage: z.string().optional(),
     bannerImage: z.string().optional(),
     sortOrder: z.number().min(0).optional(),
@@ -78,7 +78,7 @@ const updateServiceCategoryValidationSchema = z.object({
     name: z.string().optional(),
     slug: z
       .string()
-      .regex(slugRegex, 'Slug must be lowercase and hyphen-separated')
+      .regex(slugRegex, "Slug must be lowercase and hyphen-separated")
       .optional(),
     description: z.string().optional(),
     iconKey: z.enum(iconKeys).optional(),
@@ -92,13 +92,13 @@ const updateServiceCategoryValidationSchema = z.object({
 
 const createServiceSubcategoryValidationSchema = z.object({
   body: z.object({
-    categoryId: z.string({ required_error: 'Category ID is required' }),
-    name: z.string({ required_error: 'Name is required' }),
+    categoryId: z.string({ required_error: "Category ID is required" }),
+    name: z.string({ required_error: "Name is required" }),
     slug: z
-      .string({ required_error: 'Slug is required' })
-      .regex(slugRegex, 'Slug must be lowercase and hyphen-separated'),
+      .string({ required_error: "Slug is required" })
+      .regex(slugRegex, "Slug must be lowercase and hyphen-separated"),
     shortDescription: z.string({
-      required_error: 'Short description is required',
+      required_error: "Short description is required",
     }),
     longDescription: z.string().optional(),
     coverImage: z.string().optional(),
@@ -120,7 +120,7 @@ const updateServiceSubcategoryValidationSchema = z.object({
     name: z.string().optional(),
     slug: z
       .string()
-      .regex(slugRegex, 'Slug must be lowercase and hyphen-separated')
+      .regex(slugRegex, "Slug must be lowercase and hyphen-separated")
       .optional(),
     shortDescription: z.string().optional(),
     longDescription: z.string().optional(),
@@ -139,14 +139,14 @@ const updateServiceSubcategoryValidationSchema = z.object({
 
 const reorderServiceCategoriesValidationSchema = z.object({
   body: z.object({
-    orderedIds: z.array(z.string()).min(1, 'orderedIds is required'),
+    orderedIds: z.array(z.string()).min(1, "orderedIds is required"),
   }),
 });
 
 const reorderServiceSubcategoriesValidationSchema = z.object({
   body: z.object({
-    categoryId: z.string({ required_error: 'categoryId is required' }),
-    orderedIds: z.array(z.string()).min(1, 'orderedIds is required'),
+    categoryId: z.string({ required_error: "categoryId is required" }),
+    orderedIds: z.array(z.string()).min(1, "orderedIds is required"),
   }),
 });
 

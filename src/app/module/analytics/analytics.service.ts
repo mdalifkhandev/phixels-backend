@@ -420,7 +420,9 @@ const getRealtimeFromDB = async () => {
     .sort({ eventAt: -1 })
     .limit(100);
 
-  const sessionIds = Array.from(new Set(events.map((event) => event.sessionId)));
+  const sessionIds = Array.from(
+    new Set(events.map((event) => event.sessionId)),
+  );
   const activeUsers = sessionIds.length;
 
   // Fetch the first event for each session to calculate total duration

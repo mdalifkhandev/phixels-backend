@@ -1,10 +1,10 @@
 class AppError extends Error {
   public statusCode: number;
 
-  constructor(statusCode: number, message: string, stack = '') {
+  constructor(statusCode: number, message: string, stack = "") {
     super(message);
     this.statusCode = statusCode;
-    this.name = 'AppError';
+    this.name = "AppError";
 
     if (stack) {
       this.stack = stack;

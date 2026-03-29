@@ -9,7 +9,9 @@ const getNextSortOrder = async () => {
 
 const createTeamMemberIntoDB = async (payload: TTeamMember) => {
   const nextSortOrder =
-    payload.sortOrder === undefined ? await getNextSortOrder() : payload.sortOrder;
+    payload.sortOrder === undefined
+      ? await getNextSortOrder()
+      : payload.sortOrder;
 
   const result = await TeamMemberModel.create({
     ...payload,
@@ -39,7 +41,10 @@ const getSingleTeamMemberFromDB = async (id: string) => {
   return result;
 };
 
-const updateTeamMemberInDB = async (id: string, payload: Partial<TTeamMember>) => {
+const updateTeamMemberInDB = async (
+  id: string,
+  payload: Partial<TTeamMember>,
+) => {
   const result = await TeamMemberModel.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,

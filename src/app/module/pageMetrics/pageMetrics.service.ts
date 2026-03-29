@@ -1,9 +1,6 @@
 import httpStatus from "http-status";
 import AppError from "../../error/appError";
-import {
-  TPageMetric,
-  TPageMetricsContent,
-} from "./pageMetrics.interface";
+import { TPageMetric, TPageMetricsContent } from "./pageMetrics.interface";
 import { PageMetricsModel } from "./pageMetrics.model";
 
 const validateMetricArrayLength = (

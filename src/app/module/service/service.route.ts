@@ -1,110 +1,115 @@
-import { Router } from 'express';
-import validateRequest from '../../middleware/validateRequest';
-import { ServiceController } from './service.controller';
-import { ServiceValidation } from './service.validation';
-import auth from '../../middleware/auth';
-import { USER_ROLE } from '../../Interface/types';
-import { upload } from '../../utils/upload.utils';
+import { Router } from "express";
+import validateRequest from "../../middleware/validateRequest";
+import { ServiceController } from "./service.controller";
+import { ServiceValidation } from "./service.validation";
+import auth from "../../middleware/auth";
+import { USER_ROLE } from "../../Interface/types";
+import { upload } from "../../utils/upload.utils";
 
 const router = Router();
 
 // Public dynamic menu/category/subcategory routes
-router.get('/menu', ServiceController.getServiceMenu);
-router.get('/categories', ServiceController.getAllServiceCategories);
-router.get('/categories/:categorySlug', ServiceController.getServiceCategoryBySlug);
+router.get("/menu", ServiceController.getServiceMenu);
+router.get("/categories", ServiceController.getAllServiceCategories);
 router.get(
-  '/categories/:categorySlug/subcategories/:subcategorySlug',
+  "/categories/:categorySlug",
+  ServiceController.getServiceCategoryBySlug,
+);
+router.get(
+  "/categories/:categorySlug/subcategories/:subcategorySlug",
   ServiceController.getServiceSubcategoryBySlugs,
 );
 
 // Admin category routes
 router.post(
-  '/upload-image',
+  "/upload-image",
   auth(USER_ROLE.admin),
-  upload.single('image'),
+  upload.single("image"),
   ServiceController.uploadServiceCategoryImage,
 );
 
 router.patch(
-  '/categories/reorder',
+  "/categories/reorder",
   auth(USER_ROLE.admin),
   validateRequest(ServiceValidation.reorderServiceCategoriesValidationSchema),
   ServiceController.reorderServiceCategories,
 );
 
 router.post(
-  '/categories',
+  "/categories",
   auth(USER_ROLE.admin),
   validateRequest(ServiceValidation.createServiceCategoryValidationSchema),
   ServiceController.createServiceCategory,
 );
 
 router.patch(
-  '/categories/:id',
+  "/categories/:id",
   auth(USER_ROLE.admin),
   validateRequest(ServiceValidation.updateServiceCategoryValidationSchema),
   ServiceController.updateServiceCategory,
 );
 
 router.delete(
-  '/categories/:id',
+  "/categories/:id",
   auth(USER_ROLE.admin),
   ServiceController.deleteServiceCategory,
 );
 
 // Admin subcategory routes
 router.patch(
-  '/subcategories/reorder',
+  "/subcategories/reorder",
   auth(USER_ROLE.admin),
-  validateRequest(ServiceValidation.reorderServiceSubcategoriesValidationSchema),
+  validateRequest(
+    ServiceValidation.reorderServiceSubcategoriesValidationSchema,
+  ),
   ServiceController.reorderServiceSubcategories,
 );
 
 router.post(
-  '/subcategories',
+  "/subcategories",
   auth(USER_ROLE.admin),
   validateRequest(ServiceValidation.createServiceSubcategoryValidationSchema),
   ServiceController.createServiceSubcategory,
 );
 
 router.get(
-  '/subcategories',
+  "/subcategories",
   auth(USER_ROLE.admin),
   ServiceController.getAllServiceSubcategories,
 );
 
 router.patch(
-  '/subcategories/:id',
+  "/subcategories/:id",
   auth(USER_ROLE.admin),
   validateRequest(ServiceValidation.updateServiceSubcategoryValidationSchema),
   ServiceController.updateServiceSubcategory,
 );
 
 router.delete(
-  '/subcategories/:id',
+  "/subcategories/:id",
   auth(USER_ROLE.admin),
   ServiceController.deleteServiceSubcategory,
 );
 
 // Legacy routes (kept for compatibility)
 router.post(
-  '/',
+  "/",
   auth(USER_ROLE.admin),
   validateRequest(ServiceValidation.createServiceValidationSchema),
   ServiceController.createService,
 );
 
-router.get('/', ServiceController.getAllServices);
+router.get("/", ServiceController.getAllServices);
 
-router.get('/:id', ServiceController.getSingleService);
+router.get("/:id", ServiceController.getSingleService);
 
 router.patch(
-  '/:id',
+  "/:id",
   auth(USER_ROLE.admin),
   validateRequest(ServiceValidation.updateServiceValidationSchema),
   ServiceController.updateService,
 );
 
-router.delete('/:id', auth(USER_ROLE.admin), ServiceController.deleteService);
+router.delete("/:id", auth(USER_ROLE.admin), ServiceController.deleteService);
 
 export const ServiceRouter = router;

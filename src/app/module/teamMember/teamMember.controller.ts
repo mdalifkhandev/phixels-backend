@@ -103,24 +103,26 @@ const deleteTeamMember = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const uploadTeamMemberImage = catchAsync(async (req: Request, res: Response) => {
-  if (!req.file) {
-    sendResponse(res, {
-      statusCode: httpStatus.BAD_REQUEST,
-      success: false,
-      message: "Image file is required",
-      data: null,
-    });
-    return;
-  }
+const uploadTeamMemberImage = catchAsync(
+  async (req: Request, res: Response) => {
+    if (!req.file) {
+      sendResponse(res, {
+        statusCode: httpStatus.BAD_REQUEST,
+        success: false,
+        message: "Image file is required",
+        data: null,
+      });
+      return;
+    }
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Image uploaded successfully",
-    data: { image: (req.file as any).path },
-  });
-});
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Image uploaded successfully",
+      data: { image: (req.file as any).path },
+    });
+  },
+);
 
 const updateTeamMemberPositions = catchAsync(
   async (req: Request, res: Response) => {

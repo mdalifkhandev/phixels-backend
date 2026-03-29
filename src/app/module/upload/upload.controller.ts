@@ -4,7 +4,7 @@ import sendResponse from "../../utils/sendResponse";
 
 const uploadFiles = catchAsync(async (req, res) => {
   const files = req.files as any[];
-  
+
   if (!files || files.length === 0) {
     return sendResponse(res, {
       statusCode: httpStatus.BAD_REQUEST,
@@ -18,7 +18,7 @@ const uploadFiles = catchAsync(async (req, res) => {
     name: file.originalname || "attachment",
     url: file.path, // Cloudinary uses 'path' for the direct URL when using multer-storage-cloudinary
     size: file.size,
-    type: file.mimetype
+    type: file.mimetype,
   }));
 
   sendResponse(res, {

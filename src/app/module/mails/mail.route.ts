@@ -8,19 +8,16 @@ import { upload } from "../../utils/upload.utils";
 const router = express.Router();
 
 router.post(
-    '/send',
-    upload.array('files'),
-    (req, res, next) => {
-        req.body = JSON.parse(JSON.stringify(req.body));
-        next();
-    },
-    validateRequest(MailValidation.sendMailValidationSchema),
-    MailController.sendMail
+  "/send",
+  upload.array("files"),
+  (req, res, next) => {
+    req.body = JSON.parse(JSON.stringify(req.body));
+    next();
+  },
+  validateRequest(MailValidation.sendMailValidationSchema),
+  MailController.sendMail,
 );
 
-router.get(
-    '/logs',
-    MailController.getMailLogs
-);
+router.get("/logs", MailController.getMailLogs);
 
 export const MailRouter = router;

@@ -12,8 +12,6 @@ const app = express();
 
 app.use(express.json());
 
-
-
 app.use(
   cors({
     origin: (_origin, callback) => {
@@ -28,8 +26,6 @@ app.use(
     ],
   }),
 );
-
-
 
 app.use(cookieParser());
 

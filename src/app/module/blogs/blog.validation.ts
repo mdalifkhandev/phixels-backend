@@ -2,21 +2,23 @@ import { z } from "zod";
 
 const createBlogValidationSchema = z.object({
   body: z.object({
-    title: z.string({
-      required_error: "Title is required"
-    }).min(1, "Title cannot be empty"),
+    title: z
+      .string({
+        required_error: "Title is required",
+      })
+      .min(1, "Title cannot be empty"),
     writer: z.string({
-      required_error: "Writer name is required"
+      required_error: "Writer name is required",
     }),
     readingTime: z.string({
-      required_error: "Reading time is required"
+      required_error: "Reading time is required",
     }),
     details: z.string({
-      required_error: "Details are required"
+      required_error: "Details are required",
     }),
     categoryName: z.string().optional(),
     slug: z.string().optional(),
-    status: z.enum(['draft', 'published']).optional(),
+    status: z.enum(["draft", "published"]).optional(),
     serviceId: z.string().optional(),
     authorId: z.string().optional(),
     icon: z.string().optional(),
@@ -24,17 +26,20 @@ const createBlogValidationSchema = z.object({
     featuredOrder: z.number().nullable().optional(),
     position: z.number().optional(),
     tags: z.preprocess((val) => {
-      if (typeof val === 'string') {
+      if (typeof val === "string") {
         try {
           return JSON.parse(val);
         } catch (e) {
           // If not valid JSON, split by comma and trim
-          return val.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+          return val
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter((tag) => tag !== "");
         }
       }
       return val;
-    }, z.array(z.string()).optional())
-  })
+    }, z.array(z.string()).optional()),
+  }),
 });
 
 const updateBlogValidationSchema = z.object({
@@ -45,7 +50,7 @@ const updateBlogValidationSchema = z.object({
     details: z.string().optional(),
     categoryName: z.string().optional(),
     slug: z.string().optional(),
-    status: z.enum(['draft', 'published']).optional(),
+    status: z.enum(["draft", "published"]).optional(),
     serviceId: z.string().optional(),
     authorId: z.string().optional(),
     icon: z.string().optional(),
@@ -53,30 +58,35 @@ const updateBlogValidationSchema = z.object({
     featuredOrder: z.number().nullable().optional(),
     position: z.number().optional(),
     tags: z.preprocess((val) => {
-      if (typeof val === 'string') {
+      if (typeof val === "string") {
         try {
           return JSON.parse(val);
         } catch (e) {
           // If not valid JSON, split by comma and trim
-          return val.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+          return val
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter((tag) => tag !== "");
         }
       }
       return val;
-    }, z.array(z.string()).optional())
-  })
+    }, z.array(z.string()).optional()),
+  }),
 });
 
 const updateBlogPositionsValidationSchema = z.object({
   body: z.object({
-    blogs: z.array(z.object({
-      id: z.string(),
-      position: z.number()
-    }))
-  })
+    blogs: z.array(
+      z.object({
+        id: z.string(),
+        position: z.number(),
+      }),
+    ),
+  }),
 });
 
 export const BlogValidation = {
   createBlogValidationSchema,
   updateBlogValidationSchema,
-  updateBlogPositionsValidationSchema
+  updateBlogPositionsValidationSchema,
 };

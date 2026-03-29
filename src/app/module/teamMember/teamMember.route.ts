@@ -6,7 +6,11 @@ import { upload } from "../../utils/upload.utils";
 import { TeamMemberController } from "./teamMember.controller";
 import { TeamMemberValidation } from "./teamMember.validation";
 
-const parseBody = (req: express.Request, _res: express.Response, next: express.NextFunction) => {
+const parseBody = (
+  req: express.Request,
+  _res: express.Response,
+  next: express.NextFunction,
+) => {
   if (req.file) {
     req.body.image = (req.file as any).path;
   }
@@ -45,7 +49,9 @@ router.get("/", TeamMemberController.getAllTeamMembers);
 router.patch(
   "/reorder",
   auth(USER_ROLE.super_admin, USER_ROLE.admin),
-  validateRequest(TeamMemberValidation.updateTeamMemberPositionsValidationSchema),
+  validateRequest(
+    TeamMemberValidation.updateTeamMemberPositionsValidationSchema,
+  ),
   TeamMemberController.updateTeamMemberPositions,
 );
 

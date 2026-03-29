@@ -1,5 +1,5 @@
-import { model, Schema } from 'mongoose';
-import { TAuthor } from './author.interface';
+import { model, Schema } from "mongoose";
+import { TAuthor } from "./author.interface";
 
 const authorSchema = new Schema<TAuthor>(
   {
@@ -15,7 +15,7 @@ const authorSchema = new Schema<TAuthor>(
     },
     profileImage: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   {
@@ -23,4 +23,4 @@ const authorSchema = new Schema<TAuthor>(
   },
 );
 
-export const AuthorModel = model<TAuthor>('Author', authorSchema);
+export const AuthorModel = model<TAuthor>("Author", authorSchema);
