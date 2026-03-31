@@ -19,6 +19,10 @@ import { PageMetricsRoutes } from "../module/pageMetrics/pageMetrics.route";
 import { LegalContentRoutes } from "../module/legalContent/legalContent.route";
 import { SitemapRouter } from "../module/sitemap/sitemap.route";
 import { UploadRouter } from "../module/upload/upload.route";
+import { ProjectRequestRouter } from "../module/projectRequest/projectRequest.route";
+import { ContactRequestRoutes } from "../module/contactRequest/contactRequest.route";
+import { NewsletterSubscriptionRoutes } from "../module/newsletterSubscription/newsletterSubscription.route";
+import { JobApplicationRoutes } from "../module/jobApplication/jobApplication.route";
 
 const router = Router();
 
@@ -102,6 +106,22 @@ const moduleRought = [
   {
     path: "/upload",
     route: UploadRouter,
+  },
+  {
+    path: "/project-requests",
+    route: ProjectRequestRouter,
+  },
+  {
+    path: "/contact-requests",
+    route: ContactRequestRoutes,
+  },
+  {
+    path: "/newsletter-subscriptions",
+    route: NewsletterSubscriptionRoutes,
+  },
+  {
+    path: "/job-applications",
+    route: JobApplicationRoutes,
   },
 ];
 
