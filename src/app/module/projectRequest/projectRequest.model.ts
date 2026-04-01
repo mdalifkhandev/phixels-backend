@@ -23,6 +23,11 @@ const projectRequestSchema = new Schema<TProjectRequest>(
     requestId: { type: String, required: true },
     isStep1EmailSent: { type: Boolean, default: false },
     isStep2EmailSent: { type: Boolean, default: false },
+    workingPhase: {
+      type: String,
+      enum: ["UI/UX", "Frontend", "Backend", "Deploy", null],
+      default: null,
+    },
     isDeleted: { type: Boolean, default: false },
   },
   {

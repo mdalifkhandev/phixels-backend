@@ -26,5 +26,6 @@ export type TProjectRequest = {
   requestId: string;
   isStep1EmailSent?: boolean;
   isStep2EmailSent?: boolean;
+  workingPhase?: "UI/UX" | "Frontend" | "Backend" | "Deploy";
   isDeleted: boolean;
 };
