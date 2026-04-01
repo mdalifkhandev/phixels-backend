@@ -21,6 +21,8 @@ const projectRequestSchema = new Schema<TProjectRequest>(
     projectProgress: { type: String, default: "New" },
     assignedTo: { type: String, default: "Unassigned" },
     requestId: { type: String, required: true },
+    isStep1EmailSent: { type: Boolean, default: false },
+    isStep2EmailSent: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
   },
   {

@@ -24,5 +24,7 @@ export type TProjectRequest = {
   projectProgress: string;
   assignedTo: string;
   requestId: string;
+  isStep1EmailSent?: boolean;
+  isStep2EmailSent?: boolean;
   isDeleted: boolean;
 };

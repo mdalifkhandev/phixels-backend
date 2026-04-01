@@ -6,9 +6,15 @@ import notFound from "./app/middleware/notFound";
 import { Routers } from "./app/router";
 import globalError from "./app/middleware/globalError";
 
+import { initProjectRequestCron } from "./app/module/projectRequest/projectRequest.cron";
+
 dotenv.config();
 
+// Force restart for new email templates
 const app = express();
+
+// Initialize Cron Jobs
+initProjectRequestCron();
 
 app.use(express.json());
 
