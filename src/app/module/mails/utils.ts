@@ -233,3 +233,106 @@ ${details ? `Additional Details:\n${details}` : ""}
 This is an automated email. Please do not reply to this message.
   `;
 };
+
+// -------------------------------------------------------------------------
+// CUSTOM TEMPLATE ENGINE (Black Header + Logo)
+// -------------------------------------------------------------------------
+const LOGO_URL = "https://i.ibb.co/68037Vw8/pLogo.png"; // Placeholder or any available generic logo url
+
+export const getCustomEmailTemplate = (title: string, content: string): string => {
+  return `
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+      .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+     
+      /* BLACK HEADER STYLE */
+      .header {
+        background-color: #000000; /* Black Background */
+        padding: 35px 20px;
+        text-align: center;
+        border-bottom: 3px solid #ED1F24;
+      }
+      .logo-img {
+        max-width: 180px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        border: 0;
+        outline: none;
+        text-decoration: none;
+      }
+     
+      .content { padding: 40px 30px; color: #333333; line-height: 1.6; }
+      .footer { background-color: #f9f9f9; padding: 20px; text-align: center; font-size: 12px; color: #888888; border-top: 1px solid #eeeeee; }
+      .btn { display: inline-block; padding: 12px 28px; background-color: #ED1F24; color: #ffffff !important; text-decoration: none; border-radius: 4px; font-weight: bold; margin-top: 15px; }
+      .info-box { background-color: #f8f9fa; border-left: 4px solid #ED1F24; padding: 15px; margin: 20px 0; border-radius: 4px; }
+     
+      .table-data { width: 100%; border-collapse: collapse; margin-top: 15px; }
+      .table-data td { padding: 12px 10px; border-bottom: 1px solid #eeeeee; vertical-align: top; font-size: 14px; }
+      .table-data td.label { font-weight: bold; width: 30%; color: #555; background-color: #fafafa; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+     
+      <!-- LOGO SECTION (Black BG) -->
+      <div class="header">
+        <h1 style="color: white; margin: 0;">PHIXELS</h1>
+      </div>
+     
+      <div class="content">
+        <h2 style="color: #000; margin-top: 0; text-align: center; font-size: 22px;">${title}</h2>
+        ${content}
+      </div>
+
+      <div class="footer">
+        <p>&copy; ${new Date().getFullYear()} Phixels. All rights reserved.</p>
+        <p style="margin:5px 0;">Questions? Contact us at phixels.io@gmail.com</p>
+        <p style="margin:5px 0;">WhatsApp: +880 1723 289090</p>
+      </div>
+    </div>
+  </body>
+  </html>
+  `;
+};
+
+export const getAdminContactEmailHtml = (data: any): string => {
+  const content = `
+    <p>A new contact request has been submitted on the website. Here are the details:</p>
+    <table class="table-data">
+      <tr><td class="label">Name</td><td>${data.name}</td></tr>
+      <tr><td class="label">Email</td><td>${data.email}</td></tr>
+      <tr><td class="label">Phone</td><td>${data.phone}</td></tr>
+      <tr><td class="label">Country</td><td>${data.country}</td></tr>
+      <tr><td class="label">Message</td><td>${data.message}</td></tr>
+    </table>
+  `;
+  return getCustomEmailTemplate("New Contact Request", content);
+};
+
+export const getUserContactEmailHtml = (data: any): string => {
+  const content = `
+    <p>Dear <strong>${data.name}</strong>,</p>
+    <p>Thank you for reaching out to us. We have received your message and our team will get back to you shortly.</p>
+    
+    <div class="info-box">
+      <strong>Your Submitted Details:</strong>
+      <table class="table-data">
+        <tr><td class="label">Name</td><td>${data.name}</td></tr>
+        <tr><td class="label">Email</td><td>${data.email}</td></tr>
+        <tr><td class="label">Phone</td><td>${data.phone}</td></tr>
+        <tr><td class="label">Country</td><td>${data.country}</td></tr>
+        <tr><td class="label">Message</td><td>${data.message}</td></tr>
+      </table>
+    </div>
+    
+    <p>Best Regards,<br/>Team Phixels</p>
+  `;
+  return getCustomEmailTemplate("Thank You For Contacting Us", content);
+};
+

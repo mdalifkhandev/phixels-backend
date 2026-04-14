@@ -2,6 +2,8 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import helmet from "helmet";
 import notFound from "./app/middleware/notFound";
 import { Routers } from "./app/router";
 import globalError from "./app/middleware/globalError";
@@ -17,6 +19,9 @@ const app = express();
 initProjectRequestCron();
 
 app.use(express.json());
+
+app.use(helmet());
+app.use(morgan("dev"));
 
 app.use(
   cors({
