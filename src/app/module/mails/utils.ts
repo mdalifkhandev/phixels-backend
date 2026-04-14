@@ -302,6 +302,14 @@ export const getCustomEmailTemplate = (title: string, content: string): string =
 };
 
 export const getAdminContactEmailHtml = (data: any): string => {
+  const filesHtml = data.files && data.files.length > 0
+    ? `<tr><td class="label">Attachments</td><td>${data.files.map((file: any) => {
+        const rawUrl = file.url || file.secure_url;
+        const finalUrl = rawUrl?.endsWith('.pdf') && rawUrl?.includes('/upload/') ? rawUrl.replace('/upload/', '/upload/fl_attachment/') : rawUrl;
+        return `<a href="${finalUrl}" target="_blank" style="color: #ED1F24; text-decoration: underline;">View File</a>`;
+      }).join(" | ")}</td></tr>`
+    : "";
+
   const content = `
     <p>A new contact request has been submitted on the website. Here are the details:</p>
     <table class="table-data">
@@ -310,12 +318,21 @@ export const getAdminContactEmailHtml = (data: any): string => {
       <tr><td class="label">Phone</td><td>${data.phone}</td></tr>
       <tr><td class="label">Country</td><td>${data.country}</td></tr>
       <tr><td class="label">Message</td><td>${data.message}</td></tr>
+      ${filesHtml}
     </table>
   `;
   return getCustomEmailTemplate("New Contact Request", content);
 };
 
 export const getUserContactEmailHtml = (data: any): string => {
+  const filesHtml = data.files && data.files.length > 0
+    ? `<tr><td class="label">Attachments</td><td>${data.files.map((file: any) => {
+        const rawUrl = file.url || file.secure_url;
+        const finalUrl = rawUrl?.endsWith('.pdf') && rawUrl?.includes('/upload/') ? rawUrl.replace('/upload/', '/upload/fl_attachment/') : rawUrl;
+        return `<a href="${finalUrl}" target="_blank" style="color: #ED1F24; text-decoration: underline;">View File</a>`;
+      }).join(" | ")}</td></tr>`
+    : "";
+
   const content = `
     <p>Dear <strong>${data.name}</strong>,</p>
     <p>Thank you for reaching out to us. We have received your message and our team will get back to you shortly.</p>
@@ -328,6 +345,7 @@ export const getUserContactEmailHtml = (data: any): string => {
         <tr><td class="label">Phone</td><td>${data.phone}</td></tr>
         <tr><td class="label">Country</td><td>${data.country}</td></tr>
         <tr><td class="label">Message</td><td>${data.message}</td></tr>
+        ${filesHtml}
       </table>
     </div>
     
