@@ -4,6 +4,7 @@ dotenv.config();
 import mongoose from "mongoose";
 import app from "./app";
 import config from "./app/config";
+import 'dotenv/config';
 
 const port = process.env.PORT || 3000; // ✅ cPanel safe
 
