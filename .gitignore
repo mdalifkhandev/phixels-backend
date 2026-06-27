@@ -1,5 +1,9 @@
 node_modules
 dist
-.vscode
 .vercel
 /src/app/module/products
+
+# Environment variables
+.env*.local
+.gitignore
+config.bat
