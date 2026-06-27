@@ -2,7 +2,7 @@ import { TProduct } from "./product.interface";
 import { ProductModel } from "./product.model";
 import AppError from "../../error/appError";
 import httpStatus from "http-status";
-import { Types } from "mongoose";
+import mongoose from "mongoose";
 
 const createProductIntoDB = async (payload: TProduct) => {
   if (payload.downloadsEnabled !== true) {
@@ -25,13 +25,13 @@ const getAllProductsFromDB = async (query: Record<string, unknown> = {}) => {
 };
 
 const getSingleProductFromDB = async (id: string) => {
-  if (!Types.ObjectId.isValid(id)) return null;
+  if (!mongoose.isValidObjectId(id)) return null;
   const result = await ProductModel.findById(id);
   return result;
 };
 
 const updateProductInDB = async (id: string, payload: Partial<TProduct>) => {
-  if (!Types.ObjectId.isValid(id)) return null;
+  if (!mongoose.isValidObjectId(id)) return null;
   if (payload.downloadsEnabled === false) {
     payload.downloadCount = null;
   }
@@ -42,7 +42,7 @@ const updateProductInDB = async (id: string, payload: Partial<TProduct>) => {
 };
 
 const deleteProductFromDB = async (id: string) => {
-  if (!Types.ObjectId.isValid(id)) return null;
+  if (!mongoose.isValidObjectId(id)) return null;
   const result = await ProductModel.findByIdAndUpdate(
     id,
     { isDeleted: true },
@@ -62,7 +62,7 @@ const updateProductPinInDB = async (
   id: string,
   payload: { isPinned: boolean; pinOrder?: 1 | 2 | 3 | null },
 ) => {
-  if (!Types.ObjectId.isValid(id)) return null;
+  if (!mongoose.isValidObjectId(id)) return null;
 
   const existing = await ProductModel.findById(id);
   if (!existing) return null;
@@ -120,7 +120,7 @@ const updateProductPinInDB = async (
 const updateProductPositionsArray = async (orderedIds: string[]) => {
   const bulkOperations = orderedIds.map((id, index) => ({
     updateOne: {
-      filter: { _id: new Types.ObjectId(id) },
+      filter: { _id: new mongoose.Types.ObjectId(id) },
       update: { position: index },
     },
   }));

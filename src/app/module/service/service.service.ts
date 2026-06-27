@@ -8,7 +8,7 @@ import {
   ServiceModel,
   ServiceSubcategoryModel,
 } from "./service.model";
-import { Types } from "mongoose";
+import mongoose from "mongoose";
 
 // Legacy service methods
 const createServiceIntoDB = async (payload: TService) => {
@@ -20,17 +20,17 @@ const getAllServicesFromDB = async () => {
 };
 
 const getSingleServiceFromDB = async (id: string) => {
-  if (!Types.ObjectId.isValid(id)) return null;
+  if (!mongoose.isValidObjectId(id)) return null;
   return ServiceModel.findById(id);
 };
 
 const updateServiceInDB = async (id: string, payload: Partial<TService>) => {
-  if (!Types.ObjectId.isValid(id)) return null;
+  if (!mongoose.isValidObjectId(id)) return null;
   return ServiceModel.findByIdAndUpdate(id, payload, { new: true });
 };
 
 const deleteServiceFromDB = async (id: string) => {
-  if (!Types.ObjectId.isValid(id)) return null;
+  if (!mongoose.isValidObjectId(id)) return null;
   return ServiceModel.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
 };
 
@@ -67,12 +67,12 @@ const updateServiceCategoryInDB = async (
   id: string,
   payload: Partial<TServiceCategory>,
 ) => {
-  if (!Types.ObjectId.isValid(id)) return null;
+  if (!mongoose.isValidObjectId(id)) return null;
   return ServiceCategoryModel.findByIdAndUpdate(id, payload, { new: true });
 };
 
 const deleteServiceCategoryFromDB = async (id: string) => {
-  if (!Types.ObjectId.isValid(id)) return null;
+  if (!mongoose.isValidObjectId(id)) return null;
   return ServiceCategoryModel.findByIdAndUpdate(
     id,
     { isDeleted: true },
@@ -110,12 +110,12 @@ const updateServiceSubcategoryInDB = async (
   id: string,
   payload: Partial<TServiceSubcategory>,
 ) => {
-  if (!Types.ObjectId.isValid(id)) return null;
+  if (!mongoose.isValidObjectId(id)) return null;
   return ServiceSubcategoryModel.findByIdAndUpdate(id, payload, { new: true });
 };
 
 const deleteServiceSubcategoryFromDB = async (id: string) => {
-  if (!Types.ObjectId.isValid(id)) return null;
+  if (!mongoose.isValidObjectId(id)) return null;
   return ServiceSubcategoryModel.findByIdAndUpdate(
     id,
     { isDeleted: true },
