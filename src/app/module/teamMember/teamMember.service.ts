@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import mongoose from "mongoose";
 import { TTeamMember } from "./teamMember.interface";
 import { TeamMemberModel } from "./teamMember.model";
 
@@ -61,7 +61,7 @@ const deleteTeamMemberFromDB = async (id: string) => {
 const updateTeamMemberPositionsArray = async (orderedIds: string[]) => {
   const bulkOperations = orderedIds.map((id, index) => ({
     updateOne: {
-      filter: { _id: new Types.ObjectId(id) },
+      filter: { _id: new mongoose.Types.ObjectId(id) },
       update: { sortOrder: index },
     },
   }));
