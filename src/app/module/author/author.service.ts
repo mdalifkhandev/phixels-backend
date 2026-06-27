@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import mongoose from "mongoose";
 import { TAuthor } from "./author.interface";
 import { AuthorModel } from "./author.model";
 
@@ -11,7 +11,7 @@ const getAllAuthorsFromDB = async () => {
 };
 
 const deleteAuthorFromDB = async (id: string) => {
-  if (!Types.ObjectId.isValid(id)) return null;
+  if (!mongoose.isValidObjectId(id)) return null;
   return AuthorModel.findByIdAndDelete(id);
 };
 
